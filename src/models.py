@@ -1,10 +1,12 @@
 from django.db import models
-from django.utils import timezone
-import os
+import os, uuid
 
 
 def get_upload_path(instance, filename):
-	return os.path.join('images', 'raffle', str(instance.pk), filename)
+	'''Split the name of ext, create a new name with uuid and return the path'''
+	ext = '.' + filename.split('.')[1]
+	filename = f"{uuid.uuid1()}"[:-18] + ext
+	return os.path.join('images', 'raffle', str(instance.raffle.pk), filename)
 
 
 class Raffle(models.Model):
@@ -20,14 +22,15 @@ class Raffle(models.Model):
 	name = models.CharField(max_length=255)
 	domain = models.SlugField(max_length=255, null=True, blank=True)
 	scheduled_date = models.DateTimeField()
-	number_quantity = models.CharField(max_length=1, choices=NUMBER_QUANTITY)
+	number_quantity = models.IntegerField(choices=NUMBER_QUANTITY)
 	price = models.DecimalField(max_digits=10, decimal_places=2)
-	min_quantity = models.IntegerField()
+	min_quantity = models.PositiveIntegerField(default=1)
 	google_tag_manage_id = models.CharField(max_length=255, null=True, blank=True)
 	pixel_facebook = models.CharField(max_length=255, null=True, blank=True)
 	youtube_video_link = models.CharField(max_length=255, null=True, blank=True)
 	description = models.TextField(null=True, blank=True)
-	create_at = models.DateTimeField(timezone.now())
+	create_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	class Meta:
 		verbose_name_plural = "Raffles"
@@ -36,6 +39,9 @@ class Raffle(models.Model):
 		if self.domain is None:
 			self.domain = SlugiFy(self.name)
 		super().salve(*arg, **kwargs)
+
+	def __str__(self):
+		return self.name
 
 
 class AutomaticBuy(models.Model):
@@ -59,11 +65,11 @@ class Category(models.Model):
 
 
 class Image(models.Model):
-	images = models.ImageField(upload_to=get_upload_path)
+	image = models.ImageField(upload_to=get_upload_path)
 	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return "Images of " + self.raffle.name
+		return "Image of " + self.raffle.name
 
 
 class Promotion(models.Model):
