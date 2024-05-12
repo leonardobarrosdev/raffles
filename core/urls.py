@@ -18,5 +18,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('src.url')),
+    path(r'', include('raffle.urls')),
+    path(r'user/', include('user.urls'))
 ]
+
+admin.site.site_header = "Rifas Premiadas"
+admin.site.site_title = "Gerêncie e venda rifas"
+admin.site.index_title = "Sistema de Gerenciamento de Rifas"
