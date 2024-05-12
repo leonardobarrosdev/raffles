@@ -1,0 +1,134 @@
+[
+  {
+    "model": "UserProfile",
+    "pk": 1,
+    "fields": {
+      "email": "user1@example.com",
+      "password": "password123",
+      "first_name": "John",
+      "last_name": "Doe",
+      "cpf": "123.456.789-01",
+      "cellfone": "555-1234",
+      "date_birth": "1990-01-01",
+      "is_staff": true
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 2,
+    "fields": {
+      "email": "user2@example.com",
+      "password": "password456",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "cpf": "987.654.321-09",
+      "cellfone": "555-5678",
+      "date_birth": "1985-05-15",
+      "is_staff": true
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 3,
+    "fields": {
+      "email": "user3@example.com",
+      "password": "password789",
+      "first_name": "Alice",
+      "last_name": "Johnson",
+      "cpf": "246.135.789-02",
+      "cellfone": "555-2468",
+      "date_birth": "1995-12-30"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 4,
+    "fields": {
+      "email": "user4@example.com",
+      "password": "passwordABC",
+      "first_name": "Bob",
+      "last_name": "Brown",
+      "cpf": "369.258.147-03",
+      "cellfone": "555-3698",
+      "date_birth": "1980-08-20"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 5,
+    "fields": {
+      "email": "user5@example.com",
+      "password": "passwordDEF",
+      "first_name": "Eva",
+      "last_name": "White",
+      "cpf": "753.951.486-04",
+      "cellfone": "555-7532",
+      "date_birth": "1975-04-10"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 6,
+    "fields": {
+      "email": "user6@example.com",
+      "password": "passwordGHI",
+      "first_name": "George",
+      "last_name": "Black",
+      "cpf": "852.753.951-05",
+      "cellfone": "555-8524",
+      "date_birth": "1993-09-25"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 7,
+    "fields": {
+      "email": "user7@example.com",
+      "password": "passwordJKL",
+      "first_name": "Kate",
+      "last_name": "Green",
+      "cpf": "159.357.468-06",
+      "cellfone": "555-1594",
+      "date_birth": "1988-11-05"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 8,
+    "fields": {
+      "email": "user8@example.com",
+      "password": "passwordMNO",
+      "first_name": "Sam",
+      "last_name": "Grey",
+      "cpf": "753.852.159-07",
+      "cellfone": "555-7538",
+      "date_birth": "1998-02-15"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 9,
+    "fields": {
+      "email": "user9@example.com",
+      "password": "passwordPQR",
+      "first_name": "Lily",
+      "last_name": "Brown",
+      "cpf": "987.654.321-09",
+      "cellfone": "555-9876",
+      "date_birth": "1970-07-06"
+    }
+  },
+  {
+    "model": "UserProfile",
+    "pk": 10,
+    "fields": {
+      "email": "user10@example.com",
+      "password": "passwordSTU",
+      "first_name": "Tom",
+      "last_name": "White",
+      "cpf": "369.258.147-03",
+      "cellfone": "555-3692",
+      "date_birth": "1992-03-18"
+    }
+  }
+]
