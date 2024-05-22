@@ -1,7 +1,9 @@
-from rest_framework import routers
-from .views import CustomerViewSet, OwnerViewSet
+from django.urls import path
+from . import views
 
-router = routers.SimpleRouter()
-router.register(r'customers', CustomerViewSet, basename='customer')
-router.register(r'owners', OwnerViewSet, basename='owner')
-urlpatterns = router.urls
+urlpatterns = [
+    path("signin/", views.signin, name="signin"),
+    path("signup/", views.signup, name="signup"),
+    path("signout/", views.signout, name="signout"),
+    path("activate/<uidb64>/<token>", views.activate, name="activate"),
+]
