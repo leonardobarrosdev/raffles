@@ -7,7 +7,7 @@ admin.site.register(Image)
 
 @admin.register(Raffle)
 class RaffleAdmin(admin.ModelAdmin):
-    list_display = ["name", "_owner", "create_at", "scheduled_date"]
+    list_display = ["title", "_owner", "create_at", "scheduled_date"]
     exclude = ["owner",]
 
     def _owner(self, instance):

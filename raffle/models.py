@@ -21,7 +21,7 @@ class Raffle(models.Model):
 	}
 	owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 	id = models.BigAutoField(primary_key=True)
-	name = models.CharField(max_length=255)
+	title = models.CharField(max_length=255)
 	domain = models.SlugField(max_length=255, null=True, blank=True)
 	scheduled_date = models.DateTimeField()
 	number_quantity = models.PositiveSmallIntegerField(choices=NUMBER_QUANTITY)
@@ -38,6 +38,9 @@ class Raffle(models.Model):
 		if self.domain is None:
 			self.domain = SlugiFy(self.name)
 		super().salve(*arg, **kwargs)
+
+	def get_absolute_url(self):
+		return reverse('raffle-detail', args=[str(self.id)])
 
 	def __str__(self):
 		return self.name
@@ -68,7 +71,7 @@ class Image(models.Model):
 	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return "Image of " + self.raffle.name
+		return "Image of " + self.raffle.title
 
 
 class Promotion(models.Model):

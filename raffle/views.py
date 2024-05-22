@@ -1,14 +1,16 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAdminUser
+from django.shortcuts import render, redirect, resolve_url
 from .models import Raffle
-from .serializer import RaffleSerializer
 
 
-class RaffleViewSet(viewsets.ModelViewSet):
-    queryset = Raffle.objects.all()
-    serializer_class = RaffleSerializer
-
-    def get_permissions(self):
-        if self.action in ('create', 'update', 'partial_update', 'destroy'):
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
+def dashboard(request):
+    return render(request, 'raffle/dashboard.html')
+def create(request):
+    return render(request, 'raffle/create.html')
+# def delete(request):
+#     return render(request, 'raffle/')
+def update(request):
+    return render(request, 'raffle/update.html')
+def list(request):
+    return render(request, 'raffle/list.html')
+def details(request, id):
+    return render(request, 'raffle/details.html')
