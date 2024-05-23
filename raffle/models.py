@@ -40,7 +40,7 @@ class Raffle(models.Model):
 		super().salve(*arg, **kwargs)
 
 	def get_absolute_url(self):
-		return reverse('raffle-detail', args=[str(self.id)])
+		return reverse('raffle_details', args=[str(self.id)])
 
 	def __str__(self):
 		return self.name
