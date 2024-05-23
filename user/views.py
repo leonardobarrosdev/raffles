@@ -64,6 +64,7 @@ def activate(request, uidb64, token):
         user = None
     if user is not None and generate_token.check_token(user.token):
         user.is_active = True
+        user.user_permissions.set(['add_raffle', 'view_raffle', 'change_raffle', 'delete_raffle'])
         user.save()
         login(request, user)
         message.success(request, "Your Account has been activated!")
@@ -73,12 +74,10 @@ def activate(request, uidb64, token):
 
 def signin(request):
     if request.method != 'POST':
-        print("I'm not a POST")
         return render(request, 'user/signin.html')
     email = request.POST['email']
     password = request.POST['password']
-    user = authenticate(email=email, password=password)
-    print("It's the user:", user.first_name)
+    user = authenticate(request, email=email, password=password)
     if user is not None:
         login(request, user)
         return render(request, 'raffle/dashboard.html', {'name': user.first_name})
