@@ -1,0 +1,43 @@
+{% extends "base_admin.html" %}
+{% block content %}
+<section class="album py-5 bg-body-tertiary">
+  <div class="container">
+    {% for raffle in raffles %}
+    <div class="card position-relative p-3">
+      <div class="d-flex justify-content-between">
+        <div class="list-group-item py-3 pe-5" for="listGroupRadioGrid{{ raffle.id }}">
+          <strong class="fw-semibold">
+            <a href="{% url 'raffle_details' raffle.id %}">{{ raffle.title }}</a>
+          </strong>
+          <span class="d-block small opacity-75">{{ raffle.description }}</span>
+        </div>
+        <div class="d-flex justify-content-around">
+          <a class="btn btn-warning py-2" href="{% url 'raffle_update' raffle.id %}">Edit</a>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{ raffle.id }}">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal{{ raffle.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you have certaintly that you he want delete this Raffle?
+          </div>
+          <form class="modal-footer" action="{% url 'raffle_delete' raffle.id %}" method="post">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

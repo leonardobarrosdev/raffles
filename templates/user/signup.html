@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block content_title %}Cadastrar{% endblock %}
+
+{% block content %}
+<main class="container">
+  {% if form.errors and not form.non_field_errors %}
+    <p class="alert alert-danger" role="alert">
+      {% blocktranslate count counter=form.errors.items|length %}
+        Please correct the error below. {% plural %}Please correct the errors below.
+      {% endblocktranslate %}
+    </p>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+      <p class="alert alert-danger" role="alert">
+          {{ error }}
+      </p>
+    {% endfor %}
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <p class="errornote">
+  {% blocktranslate trimmed %}
+      You are authenticated as {{ username }}, but are not authorized to
+      access this page. Would you like to login to a different account?
+  {% endblocktranslate %}
+  </p>
+  {% endif %}
+
+  {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+      {% if message.level in (DEFAULT_MESSAGE_LEVELS.WARNING, DEFAULT_MESSAGE_LEVELS.ERROR)  %}
+        <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+        {{ message }}
+        </li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form action="." method="post" id="register_form" class="row g-3 needs-validateion" novalidate>
+    {% csrf_token %}
+    <div class="col-md-4">
+      <label for="fname" class="form-label">Nome</label>
+      <input type="text" class="form-control" name="fname" id="fname" placeholder="Digite seu nome" required>
+    </div>
+    <div class="col-md-4">
+      <label for="email" class="form-label">E-mail</label>
+      <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu melhor E-mail" required>
+    </div>
+    <div class="col-md-4">
+      <label for="cpf" class="form-label">CPF</label>
+      <input type="text" class="form-control" name="cpf" id="cpf" placeholder="000.000.000-00" required data-mask-for-cpf>
+    </div>
+    <div class="col-md-4">
+      <label for="phone" class="form-label">Telefone</label>
+      <input type="tel" class="form-control" name="phone" id="phone" placeholder="(00)00000-0000" required data-mask-for-phone>
+    </div>
+    <div class="col-md-4">
+      <label for="date_birth" class="form-label">Data de nascimento</label>
+      <input type="date" class="form-control" name="date_birth" id="date_birth" required>
+    </div>
+    <div class="col-md-4">
+      <label for="password" class="form-label">Senha</label>
+      <input type="password" class="form-control" name="password" id="password" required>
+    </div>
+    <div class="col-md-4">
+      <label for="password2" class="form-label">Senha</label>
+      <input type="password" class="form-control" name="password2" id="password2" required>
+    </div>
+    <div class="col-md-4 form-check">
+      <input class="form-check-input" type="checkbox" value="" id="termCheck">
+      <label class="form-check-label" for="termCheck">
+        Para proseguir você deve aceitar os Termos e condições
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary my-3">Cadastrar-se</button>
+    <a class="btn btn-primary my-3" href="{% url 'signin' %}">Voltar</a>
+  </form>
+</main>
+
+<!-- Inserir as dependências nessa sequência pois os últimos dependem dos que vem primeiro -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  $(document).on('keydown', '[data-mask-for-cpf]', function (e) {
+    var digit = e.key.replace(/\D/g, '');
+    var value = $(this).val().replace(/\D/g, '');
+    var size = value.concat(digit).length;
+    $(this).mask((size <= 11) ? '000.000.000-00' : '000000000000');
+  });
+</script>
+
+<script>
+    $(document).on('keydown', '[data-mask-for-phone]', function (e) {
+      $(this).mask('')
+      var digit = e.key.replace(/\D/g, '');
+      var value = $(this).val().replace(/\D/g, '');
+      var size = value.concat(digit).length;
+      $(this).mask((size > 8 and size <= 14) ? '(00)00000-0000' : '+00 (00)00000-0000');
+    });
+</script>
+<!-- <script type="text/javascript" src="{% static 'utils/normalize.js' %}"></script> -->
+{% endblock %}
