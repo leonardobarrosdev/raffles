@@ -23,10 +23,11 @@ class Raffle(models.Model):
 	id = models.BigAutoField(primary_key=True)
 	title = models.CharField(max_length=255)
 	domain = models.SlugField(max_length=255, null=True, blank=True)
-	scheduled_date = models.DateTimeField()
+	scheduled_date = models.DateTimeField(null=True, blank=True)
 	number_quantity = models.PositiveSmallIntegerField(choices=NUMBER_QUANTITY)
 	price = models.DecimalField(max_digits=10, decimal_places=2)
 	min_quantity = models.PositiveIntegerField(default=1)
+	digital = models.BooleanField(default=False, null=True, blank=True)
 	google_tag_manage_id = models.CharField(max_length=255, null=True, blank=True)
 	pixel_facebook = models.CharField(max_length=255, null=True, blank=True)
 	youtube_video_link = models.CharField(max_length=255, null=True, blank=True)
@@ -75,7 +76,7 @@ class Image(models.Model):
 
 
 class Promotion(models.Model):
-	number_quantity = models.PositiveIntegerField(default=0)
+	amount = models.PositiveIntegerField(default=0)
 	price = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
 

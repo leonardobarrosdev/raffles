@@ -29,8 +29,8 @@ def create(request):
                 return redirect('raffle_list')
             except:
                 messages.warning(request, "Coudn't save, retry, please!")
-    form = RaffleForm(request.POST)
-    return render(request, 'raffle/create.html')
+    form = RaffleForm()
+    return render(request, 'raffle/create.html', {'form': form})
 
 @login_required(redirect_field_name='signin')
 def delete(request, id):
