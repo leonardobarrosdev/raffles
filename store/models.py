@@ -4,44 +4,56 @@ from django.contrib.auth import get_user_model
 from raffle.models import Raffle
 
 
-class Cart(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.id)
-
-
-class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True, related_name="items")
-    product = models.ForeignKey(Raffle, on_delete=models.CASCADE, blank=True, null=True, related_name="cartitems")
-    quantity = models.PositiveSmallIntegerField(default=0)
-
-
 class Order(models.Model):
     PAYMENT_STATUS = [
         ('P', 'Pending'),
         ('C', 'Complete'),
         ('F', 'Failed'),
     ]
-    owner = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    customer = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     status = models.CharField(max_length=50, choices=PAYMENT_STATUS, default='P')
-    placed_at = models.DateTimeField(auto_now_add=True)
+    date_orderd = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.status
 
     @property
-    def total_price(self):
-        items = self.items.all()
-        total = sum([item.quantity * item.product.price for items in items])
+    def get_total_price(self):
+        order_items = self.OrderItem.all()
+        total = sum([item.get_total() for item in order_items])
+        return total
+
+    @property
+    def get_items_quantity(self):
+        order_items = self.OrderItem.all()
+        total = sum([item.quantity for item in order_items])
         return total
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="items")
     product = models.ForeignKey(Raffle, on_delete=models.PROTECT)
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.product.name
+
+    @property
+    def get_total(self):
+        total = self.quantity * self.product.price
+        return total
+
+
+class ShippingAddress(models.Model):
+    customer = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    address = models.CharField(max_length=300)
+    number = models.PositiveSmallIntegerField()
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=2)
+    zipcode = models.IntegerField()
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.city} - {self.state}'
