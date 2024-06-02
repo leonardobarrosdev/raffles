@@ -1,4 +1,26 @@
-{% extends "base_admin.html" %}
-{% block content %}
-<h1 class="text-center">form to create Raffle</h1>
+{% extends "layouts/base_admin.html" %}
+
+{% block container_header %}
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'raffle_list' %}">Raffles</a></li>
+    <li class="breadcrumb-item active" aria-current="page">create</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block container_fluid %}
+<section class="row align-items-start justify-content-center">
+  <form class="col-9" action="{{ app_path }}" method="post">{% csrf_token %}
+    {{ form }}
+    <div class="form-group m-3">
+      <label>Upload image</label>
+      <input required name="images" type="file" multiple class="form-control-file">
+    </div>
+    {{ form_autobuy }}
+    {{ form_promotion }}
+    {{ form_awardedquota }}
+    <button class="btn btn-success my-3" type="submit" name="button">Create</button>
+  </form>
+</section>
 {% endblock %}

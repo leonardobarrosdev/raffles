@@ -1,0 +1,35 @@
+{% extends 'layouts/base_store.html' %}
+
+{% block content %}
+<section class="cart-body my-3 py-3">
+  <div class="d-flex justify-content-between">
+    <strong>Items: {{ order.get_items_quantity }}</strong>
+    <strong>Total: {{ order.get_total_price|floatformat:2 }}</strong>
+    <button class="btn btn-success" type="button" name="button"></button>
+  </div>
+</section>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Item</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <th scope="row">
+        <img src="{% url item.raffle.image %}" alt="{{ item.raffle.title }}">
+      </th>
+      <td>{{ item.raffle.title }}</td>
+      <td>{{ item.raffle.price|floatformat:2 }}</td>
+      <td>{{ items.quantity }}</td>
+      <td>{{ items.get_total }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

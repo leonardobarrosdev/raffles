@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% load i18n static %}
 {% block content_title %}Cadastrar{% endblock %}
 
@@ -32,11 +32,9 @@
   {% if messages %}
     <ul class="messages">
     {% for message in messages %}
-      {% if message.level in (DEFAULT_MESSAGE_LEVELS.WARNING, DEFAULT_MESSAGE_LEVELS.ERROR)  %}
         <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
         {{ message }}
         </li>
-      {% endif %}
     {% endfor %}
     </ul>
   {% endif %}

@@ -1,43 +1,89 @@
-{% extends "base_admin.html" %}
-{% block content %}
-<section class="album py-5 bg-body-tertiary">
-  <div class="container">
-    {% for raffle in raffles %}
-    <div class="card position-relative p-3">
-      <div class="d-flex justify-content-between">
-        <div class="list-group-item py-3 pe-5" for="listGroupRadioGrid{{ raffle.id }}">
-          <strong class="fw-semibold">
-            <a href="{% url 'raffle_details' raffle.id %}">{{ raffle.title }}</a>
-          </strong>
-          <span class="d-block small opacity-75">{{ raffle.description }}</span>
-        </div>
-        <div class="d-flex justify-content-around">
-          <a class="btn btn-warning py-2" href="{% url 'raffle_update' raffle.id %}">Edit</a>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{ raffle.id }}">
-            Delete
-          </button>
-        </div>
-      </div>
+{% extends "layouts/base_admin.html" %}
+
+{% block extrastyle %}
+<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block container_header %}
+<h1 class="h3 mb-0 text-gray-800">Raffles</h1>
+<a href="{% url 'raffle_create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        class="fas fa-download fa-sm text-white-50"></i> Create</a>
+{% endblock %}
+
+{% block container_fluid %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="modal{{ raffle.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            Are you have certaintly that you he want delete this Raffle?
-          </div>
-          <form class="modal-footer" action="{% url 'raffle_delete' raffle.id %}" method="post">
-            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Domain</th>
+                    <th>Digital</th>
+                    <th>Scheduled Date</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Name</th>
+                    <th>Domain</th>
+                    <th>Digital</th>
+                    <th>Scheduled Date</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                  </tr>
+                </tfoot>
+                <tbody>
+                {% for raffle in raffles %}
+                  <tr>
+                    <td><a href="{% url 'raffle_details' raffle.id %}">
+                      {{ raffle.title }}
+                    </a></td>
+                    <td>raffle.domain</td>
+                    <td>raffle.digital</td>
+                    <td>raffle.scheduled_date</td>
+                    <td><a class="btn btn-warning py-2" href="{% url 'raffle_update' raffle.id %}">Edit</a></td>
+                    <td>
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{ raffle.id }}">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal{{ raffle.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Are you have certaintly that you he want delete this Raffle?
+                        </div>
+                        <form class="modal-footer" action="{% url 'raffle_delete' raffle.id %}" method="post">
+                          <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-      </div>
     </div>
-    {% endfor %}
-  </div>
-</section>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Page level custom scripts -->
+<script src="js/demo/datatables-demo.js"></script>
 {% endblock %}
