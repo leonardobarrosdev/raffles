@@ -1,4 +1,5 @@
 {% extends "layouts/base_admin.html" %}
+{% load static %}
 
 {% block extrastyle %}
 <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -21,7 +22,7 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Domain</th>
+                    <th>Quantidade</th>
                     <th>Digital</th>
                     <th>Scheduled Date</th>
                     <th>Update</th>
@@ -31,7 +32,7 @@
                 <tfoot>
                   <tr>
                     <th>Name</th>
-                    <th>Domain</th>
+                    <th>Quantidade</th>
                     <th>Digital</th>
                     <th>Scheduled Date</th>
                     <th>Update</th>
@@ -44,9 +45,9 @@
                     <td><a href="{% url 'raffle_details' raffle.id %}">
                       {{ raffle.title }}
                     </a></td>
-                    <td>raffle.domain</td>
-                    <td>raffle.digital</td>
-                    <td>raffle.scheduled_date</td>
+                    <td>{{ raffle.number_quantity }}</td>
+                    <td>{{ raffle.digital }}</td>
+                    <td>{{ raffle.scheduled_date }}</td>
                     <td><a class="btn btn-warning py-2" href="{% url 'raffle_update' raffle.id %}">Edit</a></td>
                     <td>
                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{ raffle.id }}">
@@ -82,8 +83,8 @@
 
 {% block extrascripts %}
 <!-- Page level plugins -->
-<script src="vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 <!-- Page level custom scripts -->
-<script src="js/demo/datatables-demo.js"></script>
+<script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 {% endblock %}

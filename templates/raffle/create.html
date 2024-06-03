@@ -12,14 +12,117 @@
 {% block container_fluid %}
 <section class="row align-items-start justify-content-center">
   <form class="col-9" action="{{ app_path }}" method="post">{% csrf_token %}
-    {{ form }}
-    <div class="form-group m-3">
+    <div class="row row-cols-2 my-3">
+      <div class="col">
+        <label for="title" class="form-label">Nome da Rifa</label>
+        <input type="text" class="form-control" name="title" placeholder="Digite o nome">
+      </div>
+      <div class="col">
+        <label for="scheduled_date" class="form-label">Data prevista para o sorteio</label>
+        <input type="datetime-local" class="form-control" name="scheduled_date">
+      </div>
+      <div class="col">
+        <label for="number_quantity" class="form-label">Quantidade de números</label>
+        <select name="number_quantity" id="number_quantity" class="form-control">
+          <option value="1" selected>100</option>
+          <option value="2">200</option>
+          <option value="3">500</option>
+          <option value="4">1000</option>
+          <option value="5">10000</option>
+          <option value="6">1000000</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="price" class="form-label">Preço</label>
+        <input type="text" class="form-control" name="price" placeholder="Digite o valor unitário">
+      </div>
+      <div class="col">
+        <label for="min_quantity" class="form-label">Quantidade mínima</label>
+        <input type="text" class="form-control" name="min_quantity" placeholder="Digite a quantidade mínima">
+      </div>
+      <div class="col">
+        <label for="digital" class="form-label">Digital</label>
+        <select class="form-control" name="digital" id="digital" area-label="Multiple select digital type">
+          <option value="1" selected>Não</option>
+          <option value="2">Sim</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="description" class="form-label"></label>
+        <textarea type="text" class="form-control" name="description" rows="3"></textarea>
+      </div>
+      <div class="col">
+        <label for="categories" class="form-label"></label>
+        <select class="form-select" multiple name="categories" aria-label="Multiple select example">
+          <option selected>Others</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group my-3">
       <label>Upload image</label>
       <input required name="images" type="file" multiple class="form-control-file">
     </div>
-    {{ form_autobuy }}
-    {{ form_promotion }}
-    {{ form_awardedquota }}
+    <div class="row row-cols-2 my-3">
+      <div class="col">
+        <div class="form-group">
+          <label for="Quantity1">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="Quantity1">
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="more_popuar" id="popular1">
+          <label class="form-check-label" for="popular1">More popular</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="Quantity2">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="Quantity2">
+        </div>
+        <div class="form-group">
+          <input class="form-check-input" type="checkbox" name="more_popuar" id="popular2">
+          <label class="form-check-label" for="popular2">More popular</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="Quantity3">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="Quantity3">
+        </div>
+        <div class="form-group">
+          <input class="form-check-input" type="checkbox" name="more_popuar" id="popular3">
+          <label class="form-check-label" for="popular3">More popular</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="Quantity4">Quantity</label>
+          <input type="number" class="form-control" name="quantity" id="Quantity4">
+        </div>
+        <div class="form-group">
+          <input class="form-check-input" type="checkbox" name="more_popuar" id="popular4">
+          <label class="form-check-label" for="popular4">More popular</label>
+        </div>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <label for="amount" class="form-label">Unidades</label>
+        <input type="number" class="form-control mb-3" name="amount" placeholder="Digite o valor unitário">
+      </div>
+      <div class="col">
+        <label for="price_amount" class="form-label">Valor unitário</label>
+        <input type="text" class="form-control" name="price_amount" placeholder="0.0">
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <label for="AwardedQuota" class="form-label">Cota</label>
+        <input type="number" class="form-control" name="AwardedQuota">
+      </div>
+    </div>
     <button class="btn btn-success my-3" type="submit" name="button">Create</button>
   </form>
 </section>
