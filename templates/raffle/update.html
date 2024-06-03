@@ -1,4 +1,13 @@
 {% extends "layouts/base_admin.html" %}
-{% block content %}
+
+{% block container_header %}
+{% include 'components/breadcrumb.html' with path='raffle_list' path_name='Lista' current='Editar' %}
+{% endblock %}
+
+{% block container_fluid %}
   {{ form }}
+  {{ formset_image }}
+  {{ formset_autobuy }}
+  {{ formset_promotion }}
+  {{ formset_quota }}
 {% endblock %}

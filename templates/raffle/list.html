@@ -2,13 +2,15 @@
 {% load static %}
 
 {% block extrastyle %}
-<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block container_header %}
 <h1 class="h3 mb-0 text-gray-800">Raffles</h1>
-<a href="{% url 'raffle_create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-        class="fas fa-download fa-sm text-white-50"></i> Create</a>
+<a href="{% url 'raffle_create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+  <i class="fas fa-download fa-sm text-white-50"></i>
+  Create
+</a>
 {% endblock %}
 
 {% block container_fluid %}
@@ -50,7 +52,7 @@
                     <td>{{ raffle.scheduled_date }}</td>
                     <td><a class="btn btn-warning py-2" href="{% url 'raffle_update' raffle.id %}">Edit</a></td>
                     <td>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{ raffle.id }}">
+                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal{{ raffle.id }}">
                         Delete
                       </button>
                     </td>
@@ -61,13 +63,13 @@
                       <div class="modal-content">
                         <div class="modal-header">
                           <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                           Are you have certaintly that you he want delete this Raffle?
                         </div>
                         <form class="modal-footer" action="{% url 'raffle_delete' raffle.id %}" method="post">
-                          <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
                           <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                       </div>
