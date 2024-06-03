@@ -1,6 +1,8 @@
-from django.forms import modelform_factory, modelformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import (
+    login_required,
+	permission_required
+)
 from django.contrib import messages
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -8,9 +10,15 @@ from core import settings
 from store.models import AutomaticBuy, AwardedQuota, Promotion
 from .models import Raffle, Image, Category
 from .forms import (
-	RaffleForm, ImageForm, AutomaticBuyForm, PromotionForm, AwardedQuotaForm
+	RaffleForm,
+	ImageFormSet,
+	AutomaticBuyFormSet,
+	PromotionFormSet,
+	AwardedQuotaFormSet
 )
 
+
+decorators = [login_required, permission_required]
 
 @login_required(redirect_field_name='signin')
 def dashboard(request):
@@ -39,18 +47,18 @@ def create(request):
 	return render(request, 'raffle/create.html', context)
 
 
+@method_decorator(decorators, name='dispatch')
 class CreateView(View):
-	decorators = [login_required]
 	template_name = 'raffle/create.html'
 	categories = Category.objects.all()
 	context = {
 		'categories': categories
 	}
 
-	def get(self, request, *args, **kwargs):
+	def get(self, request):
 		return render(request, self.template_name, self.context)
 
-	def post(self, request, *args, **kwargs):
+	def post(self, request):
 		product = self.__save_raffle(request)
 		self.__save_images(request, product)
 		self.__save_autobuy(request, product)
@@ -145,6 +153,47 @@ def update(request, id):
 		except Exception as e:
 			print("Update is ", e)
 	return render(request, 'raffle/update.html', {'form': form})
+
+
+@method_decorator(decorators, name='dispatch')
+class UpdateView(View):
+	template_name = 'raffle/update.html'
+	context = {}
+
+	def get(self, request, id):
+		raffle = Raffle.objects.get(id=id)
+		form = RaffleForm(instance=raffle)
+		formset_image = ImageFormSet(request.FILES, instance=raffle)
+		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
+		formset_promotion = PromotionFormSet(instance=raffle)
+		formset_quota = AwardedQuotaFormSet(instance=raffle)
+		self.context = {
+			'form': form,
+			'formset_image': formset_image,
+			'formset_autobuy': formset_autobuy,
+			'formset_promotion': formset_promotion,
+			'formset_quota': formset_quota,
+		}
+		return render(request, self.template_name, self.context)
+
+	def post(self, request, id):
+		raffle = Raffle.objects.get(id=id)
+		form = RaffleForm(instance=raffle)
+		formset_image = ImageFormSet(request.FILES, instance=raffle)
+		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
+		formset_promotion = PromotionFormSet(instance=raffle)
+		formset_quota = AwardedQuotaFormSet(instance=raffle)
+		if not form.is_valid():
+			messages.error(request, 'Changes not valids. Retry, please.')
+			return render(request, self.template_name, self.context)
+		form.save()
+		if formset_image.is_valid(): formset_image.save()
+		if formset_autobuy.is_valid(): formset_autobuy.save()
+		if formset_promotion.is_valid(): formset_promotion.save()
+		if formset_quota.is_valid(): formset_quota.save()
+		messages.success(request, 'Successfully updated!')
+		return redirect(request, 'list')
+
 
 @login_required(redirect_field_name='signin')
 def list(request):
