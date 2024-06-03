@@ -1,6 +1,7 @@
 import os, uuid
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 def get_upload_path(instance, filename):
@@ -8,6 +9,16 @@ def get_upload_path(instance, filename):
 	ext = '.' + filename.split('.')[-1]
 	filename = f"{uuid.uuid1()}"[:-18] + ext
 	return os.path.join('images', 'raffle', str(instance.raffle.pk), filename)
+
+
+class Category(models.Model):
+	name = models.CharField(max_length=120, default='outros')
+
+	class Meta:
+		verbose_name_plural = 'Categories'
+
+	def __str__(self):
+		return self.name
 
 
 class Raffle(models.Model):
@@ -19,26 +30,24 @@ class Raffle(models.Model):
 		5: 10000,
 		6: 1000000
 	}
-	owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 	id = models.BigAutoField(primary_key=True)
 	title = models.CharField(max_length=255)
-	domain = models.SlugField(max_length=255, null=True, blank=True)
 	scheduled_date = models.DateTimeField(null=True, blank=True)
 	number_quantity = models.PositiveSmallIntegerField(choices=NUMBER_QUANTITY)
 	price = models.DecimalField(max_digits=10, decimal_places=2)
 	min_quantity = models.PositiveIntegerField(default=1)
 	digital = models.BooleanField(default=False, null=True, blank=True)
-	google_tag_manage_id = models.CharField(max_length=255, null=True, blank=True)
-	pixel_facebook = models.CharField(max_length=255, null=True, blank=True)
-	youtube_video_link = models.CharField(max_length=255, null=True, blank=True)
 	description = models.TextField(null=True, blank=True)
 	create_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+	category = models.ManyToManyField(Category)
+	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
 	def salve(self, *args, **kwargs):
 		if self.domain is None:
-			self.domain = SlugiFy(self.name)
-		super().salve(*arg, **kwargs)
+			self.domain = SlugiFy(self.name) # type: ignore
+		super().salve(*arg, **kwargs) # type: ignore
 
 	def get_absolute_url(self):
 		return reverse('raffle_details', args=[str(self.id)])
@@ -47,40 +56,9 @@ class Raffle(models.Model):
 		return self.name
 
 
-class AutomaticBuy(models.Model):
-	quantity = models.PositiveIntegerField(default=0)
-	more_popular = models.BooleanField(null=True)
-	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
-
-	class Meta:
-		verbose_name_plural = 'Automatic Buys'
-
-
-class Category(models.Model):
-	name = models.CharField(max_length=120, default='outros')
-	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
-
-	class Meta:
-		verbose_name_plural = 'Categories'
-
-	def __str__(self):
-		return self.name
-
-
 class Image(models.Model):
-	image = models.ImageField(upload_to=get_upload_path)
-	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
+	product = models.ForeignKey(Raffle, on_delete=models.CASCADE)
+	image = models.ImageField(upload_to=get_upload_path, default='images/raffle/default.svg')
 
 	def __str__(self):
 		return "Image of " + self.raffle.title
-
-
-class Promotion(models.Model):
-	amount = models.PositiveIntegerField(default=0)
-	price = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)
-
-
-class AwardedQuota(models.Model):
-	number = models.PositiveIntegerField(default=0)
-	raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE)

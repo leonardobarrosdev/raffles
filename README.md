@@ -20,3 +20,10 @@ python manage.py migrate
 ```
 python manage.py createsuperuser --username admin --email admin@example.com
 ```
+
+### References
+Raffle:
+https://www.youtube.com/watch?v=WcTkr-jrRIM
+
+Token:
+https://docs.djangoproject.com/en/5.0/howto/csrf/
