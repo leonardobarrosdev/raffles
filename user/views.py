@@ -1,16 +1,21 @@
+from tokenize import generate_tokens
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, send_mail
+from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
 from core import settings
 from .utils import AppTokenGenerator
 from .forms import UserProfileForm
 
 
 def signup(request):
+	if request.user.is_authenticated:
+		return redirect('store')
 	if request.method != 'POST':
 		return render(request, 'user/signup.html')
 	model = get_user_model()
@@ -63,32 +68,33 @@ def activate(request, uidb64, token):
 		user = model.objects.get(id=uid)
 	except (TypeError, ValueError, OverflowError, model.DoesNotExist):
 		user = None
-	if user is not None and generate_token.check_token(user.token):
+	if user is not None and generate_tokens.check_token(user.token):
 		user.is_active = True
 		user.user_permissions.set(['add_raffle', 'view_raffle', 'change_raffle', 'delete_raffle'])
 		user.save()
 		login(request, user)
-		message.success(request, "Your Account has been activated!")
+		messages.success(request, "Your Account has been activated!")
 		return redirect('signin')
 	messages.error(request, "Activation link is invalid!")
 	return render(request, 'user/signup.html')
 
 def signin(request):
-	if request.method != 'POST':
-		return render(request, 'user/signin.html')
-	email = request.POST['email']
-	password = request.POST['password']
-	user = authenticate(request, email=email, password=password)
-	if user is not None:
-		login(request, user)
-		return render(request, 'admin/dashboard.html', {'user': user})
+	if request.user.is_authenticated:
+		return redirect('store')
+	if request.method == 'POST':
+		email = request.POST['email']
+		password = request.POST['password']
+		user = authenticate(request, email=email, password=password)
+		if user is not None:
+			login(request, user)
+			return render(request, 'admin/dashboard.html', {'user': user})
 	messages.error(request, "Bad Credentials.")
-	return redirect('signin')
+	return render(request, 'user/signin.html')
 
 def signout(request):
 	logout(request)
 	messages.success(request, "Logged out successfully!")
-	return redirect('signout')
+	return redirect('store')
 
 def update_details(request, id):
 	user_model = get_user_model()
