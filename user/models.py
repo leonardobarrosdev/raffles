@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
+import os
 
 
 def get_upload_path(instance, filename):
@@ -43,7 +44,7 @@ class UserManager(BaseUserManager):
 
 
 class UserProfile(AbstractUser):
-	photo = models.ImageField(upload_to=get_upload_path, default='images/profile.svg')
+	# photo = models.ImageField(upload_to=get_upload_path, default='images/profile.svg')
 	email = models.EmailField(unique=True)
 	cpf = models.CharField(max_length=11, unique=True, null=True, blank=True)
 	phone = models.CharField("contato", max_length=11, null=True, blank=True)

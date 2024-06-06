@@ -12,7 +12,7 @@ def get_upload_path(instance, filename):
 
 
 class Category(models.Model):
-	name = models.CharField(max_length=120, default='outros')
+	name = models.CharField(max_length=120)
 
 	class Meta:
 		verbose_name_plural = 'Categories'
@@ -41,13 +41,13 @@ class Raffle(models.Model):
 	create_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-	category = models.ManyToManyField(Category)
+	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
-	def salve(self, *args, **kwargs):
+	def save(self, *args, **kwargs):
 		if self.domain is None:
 			self.domain = SlugiFy(self.name) # type: ignore
-		super().salve(*arg, **kwargs) # type: ignore
+		super().salve(*args, **kwargs)
 
 	def get_absolute_url(self):
 		return reverse('raffle_details', args=[str(self.id)])
