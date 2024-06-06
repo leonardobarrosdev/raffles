@@ -17,8 +17,8 @@ from .forms import (
 	AwardedQuotaFormSet
 )
 
-
-decorators = [login_required, permission_required]
+permissions = ['raffle.*']
+decorators = [login_required, permission_required(permissions, raise_exception=True)]
 
 @login_required(redirect_field_name='signin')
 def dashboard(request):
@@ -50,89 +50,46 @@ def create(request):
 @method_decorator(decorators, name='dispatch')
 class CreateView(View):
 	template_name = 'raffle/create.html'
-	categories = Category.objects.all()
-	context = {
-		'categories': categories
-	}
+	context = {}
 
 	def get(self, request):
+		form = RaffleForm()
+		formset_image = ImageFormSet()
+		formset_autobuy = AutomaticBuyFormSet()
+		formset_promotion = PromotionFormSet()
+		formset_quota = AwardedQuotaFormSet()
+		self.context = {
+			'form': form,
+			'formset_image': formset_image,
+			'formset_autobuy': formset_autobuy,
+			'formset_promotion': formset_promotion,
+			'formset_quota': formset_quota,
+		}
 		return render(request, self.template_name, self.context)
 
 	def post(self, request):
-		product = self.__save_raffle(request)
-		self.__save_images(request, product)
-		self.__save_autobuy(request, product)
-		self.__save_promotion(request, product)
-		self.__save_awardedquota(request, product)
+		raffle = RaffleForm(request.POST)
+		raffle.owner = request.user
+		if not raffle.is_valid():
+			self.context['form'] = raffle
+			return render(request, self.template_name, self.context)
+		raffle.save()
+		formset_image = ImageFormSet(request.FILES, instance=raffle)
+		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
+		formset_promotion = PromotionFormSet(instance=raffle)
+		formset_quota = AwardedQuotaFormSet(instance=raffle)
+		if formset_image.is_valid(): formset_image.save()
+		if formset_autobuy.is_valid(): formset_autobuy.save()
+		if formset_promotion.is_valid(): formset_promotion.save()
+		if formset_quota.is_valid(): formset_quota.save()
 		messages.success(request, "Your Raffle has been created succesfully!")
 		return redirect('raffle_list')
-	
-	def __save_raffle(self, request):
-		title = request.POST['title']
-		scheduled_date = request.POST['scheduled_date']
-		number_quantity = request.POST['number_quantity']
-		price = request.POST['price']
-		min_quantity = request.POST['min_quantity']
-		digital = request.POST['digital']
-		description = request.POST['description']
-		owner = request.user
-		categories = request.POST.getlist('categories')
-		raffle = Raffle.objects.create(
-			title=title,
-			scheduled_date=scheduled_date,
-			number_quantity=number_quantity,
-			price=price,
-			min_quantity=min_quantity,
-			digital=digital,
-			description=description,
-			owner=owner,
-		)
-		raffle.save()
-		for category in categories:
-			raffle.add(category=category)
-
-	@classmethod
-	def __save_images(cls, request, product):
-		images = request.FILES.getlist('image')
-		for img in images:
-			image = Image(product=product, image=img)
-			image.save()
-	
-	def __save_autobuy(self, request, product):
-		quantities = request.POST.getlist("quantity")
-		more_populars = request.POST.getlist("more_popular")
-		for quantity, more_popular in zip(quantities, more_populars):
-			autobuy = AutomaticBuy.objects.create(
-				product=product,
-				quentity=quantity,
-				more_popular=more_popular
-			)
-			autobuy.save()
-	
-	def __save_promotion(self, request, product):
-		amounts = request.POST.getlist('amount')
-		prices = request.POST.getlist('price')
-		for amount, price in zip(amounts, prices):
-			promotion = Promotion.objects.create(
-				product=product,
-				amount=amount,
-				price=price
-			)
-			promotion.save()
-	
-	def __save_awardedquota(self, request, product):
-		awardedquota = request.POST['AwardedQuota']
-		quota = AwardedQuota.objects.create(
-			product=product,
-			number=awardedquota
-		)
-		quota.save()
 
 
 @login_required(redirect_field_name='signin')
 def delete(request, id):
 	raffle = get_object_or_404(Raffle, id=id)
-	if request.method == 'POST' and request.user.has_perm('delete_raffle'):
+	if request.method == 'POST' and request.user.has_perm('raffle.delete_raffle'):
 		try:
 			raffle.delete()
 			messages.success(request, "Raffle succesfully deleted!")
@@ -163,7 +120,7 @@ class UpdateView(View):
 	def get(self, request, id):
 		raffle = Raffle.objects.get(id=id)
 		form = RaffleForm(instance=raffle)
-		formset_image = ImageFormSet(request.FILES, instance=raffle)
+		formset_image = ImageFormSet(instance=raffle)
 		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
 		formset_promotion = PromotionFormSet(instance=raffle)
 		formset_quota = AwardedQuotaFormSet(instance=raffle)
@@ -179,14 +136,14 @@ class UpdateView(View):
 	def post(self, request, id):
 		raffle = Raffle.objects.get(id=id)
 		form = RaffleForm(instance=raffle)
-		formset_image = ImageFormSet(request.FILES, instance=raffle)
-		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
-		formset_promotion = PromotionFormSet(instance=raffle)
-		formset_quota = AwardedQuotaFormSet(instance=raffle)
 		if not form.is_valid():
 			messages.error(request, 'Changes not valids. Retry, please.')
 			return render(request, self.template_name, self.context)
 		form.save()
+		formset_image = ImageFormSet(request.FILES, instance=raffle)
+		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
+		formset_promotion = PromotionFormSet(instance=raffle)
+		formset_quota = AwardedQuotaFormSet(instance=raffle)
 		if formset_image.is_valid(): formset_image.save()
 		if formset_autobuy.is_valid(): formset_autobuy.save()
 		if formset_promotion.is_valid(): formset_promotion.save()
