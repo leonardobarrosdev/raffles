@@ -32,7 +32,7 @@ class RaffleTest(TestCase):
 				"min_quantity": 8,
 				"digital": False,
 				"description": "Kit beautfull for woman",
-				"owner": UserProfile.objects.all().first(),
+				"owner": UserProfile.objects.first(),
 			},
 			headers={"accept": "application/json"},
 		)
@@ -42,5 +42,8 @@ class RaffleTest(TestCase):
 def date_generator(year=datetime.now().year):
 	day = random.randint(1, 28)
 	month = random.randint(1, 12)
-	data = "{}-{}-{} {}:{}:{}".format(month, day, year, 12, 00, 00)
-	return datetime.strptime(data, "%m-%d-%Y %H:%M:%S")
+	hours = random.randint(1, 24)
+	minutes = random.randint(0, 59)
+	seconds = random.randint(0, 59)
+	data = "{}-{}-{} {}:{}:{}".format(day, month, year, hours, minutes, seconds)
+	return datetime.strptime(data, "%d-%m-%Y %H:%M:%S")
