@@ -44,21 +44,21 @@ class Raffle(models.Model):
 	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
-	def save(self, *args, **kwargs):
-		if self.domain is None:
-			self.domain = SlugiFy(self.name) # type: ignore
-		super().salve(*args, **kwargs)
+	# def save(self, *args, **kwargs):
+	# 	if self.domain is None:
+	# 		self.domain = SlugiFy(self.name) # type: ignore
+	# 	super().salve(*args, **kwargs)
 
 	def get_absolute_url(self):
 		return reverse('raffle_details', args=[str(self.id)])
 
 	def __str__(self):
-		return self.name
+		return self.title
 
 
 class Image(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.CASCADE)
+	product = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='raffle_gallery')
 	image = models.ImageField(upload_to=get_upload_path, default='images/raffle/default.svg')
 
 	def __str__(self):
-		return "Image of " + self.raffle.title
+		return "Image of " + self.product.title

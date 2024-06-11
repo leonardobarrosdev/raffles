@@ -11,7 +11,6 @@ class RaffleForm(forms.ModelForm):
 	class Meta:
 		model = Raffle
 		fields = ['title', 'scheduled_date', 'number_quantity', 'category', 'price', 'min_quantity', 'digital', 'description', 'owner']
-		# exclude = ['owner']
 		labels = {
 			'title': 'Nome da Rifa',
 			'scheduled_date': 'Data',
@@ -19,7 +18,7 @@ class RaffleForm(forms.ModelForm):
 			'category': 'Catégorias',
 			'price': 'Preço',
 			'min_quantity': 'Quantidade mínima',
-			'digital': 'Typo de produto',
+			'digital': 'Digital',
 			'description': 'Descrção',
 		}
 		widgets = {

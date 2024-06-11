@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import (
-    login_required,
+	login_required,
 	permission_required
 )
 from django.contrib import messages
 from django.views import View
 from django.utils.decorators import method_decorator
 from core import settings
+from user.models import UserProfile
 from store.models import AutomaticBuy, AwardedQuota, Promotion
 from .models import Raffle, Image, Category
 from .forms import (
@@ -32,20 +33,6 @@ def dashboard(request):
 		return render(request, 'admin/dashboard.html', context)
 	return render(request, 'admin/dashboard.html', context)
 
-@login_required(redirect_field_name='signin')
-def create(request):
-	form = RaffleForm(instance=Image)
-	if request.method == 'POST':
-		form = RaffleForm(request.POST, request.FILES.getlist('image'))
-		if form.is_valid():
-			raffle = form.save(commit=False)
-			raffle.save()
-			messages.success(request, "Your Raffle has been created succesfully!")
-			return redirect('raffle_list')
-		messages.warning(request, "Coudn't save, retry, please!")
-	context = {'form': form,}
-	return render(request, 'raffle/create.html', context)
-
 
 @method_decorator(decorators, name='dispatch')
 class CreateView(View):
@@ -68,11 +55,14 @@ class CreateView(View):
 		return render(request, self.template_name, self.context)
 
 	def post(self, request):
-		raffle = RaffleForm(request.POST)
-		raffle.owner = request.user
-		if not raffle.is_valid():
-			self.context['form'] = raffle
+		form = RaffleForm(request.POST, request.FILES.getlist('image'))
+		if not form.is_valid():
+			self.context['form'] = form
 			return render(request, self.template_name, self.context)
+		if not request.user.is_authenticated:
+			return redirect('signin')
+		raffle = form.save(commit=False)
+		raffle.owner = request.user
 		raffle.save()
 		formset_image = ImageFormSet(request.FILES, instance=raffle)
 		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
@@ -135,7 +125,7 @@ class UpdateView(View):
 
 	def post(self, request, id):
 		raffle = Raffle.objects.get(id=id)
-		form = RaffleForm(instance=raffle)
+		form = RaffleForm(request.FILES, instance=raffle)
 		if not form.is_valid():
 			messages.error(request, 'Changes not valids. Retry, please.')
 			return render(request, self.template_name, self.context)
