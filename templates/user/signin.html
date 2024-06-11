@@ -14,18 +14,8 @@
     </p>
   {% endif %}
 
-  {% if messages %}
-    <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-      {{ message }}
-      </li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-
   <div class="form-signin w-sm-100 w-md-80 w-50 m-auto">
-    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+    <form action="{% url 'signin' %}" method="post" id="login-form">{% csrf_token %}
       <!-- <img class="mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
       <div class="form-floating my-3">
