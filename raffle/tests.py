@@ -15,6 +15,11 @@ NUMBER_QUANTITY = {
 class RaffleTest(TestCase):
 	def setUp(self):
 		self.client = Client()
+		self.credentials = {
+			"email": "dev@company.com",
+			"password": "123456"
+		}
+		self.client.post("/auth/signin/", self.credentials, follow=True)
 
 	def test_list(self):
 		response = self.client.get("/raffle/list/")
@@ -45,5 +50,6 @@ def date_generator(year=datetime.now().year):
 	hours = random.randint(1, 24)
 	minutes = random.randint(0, 59)
 	seconds = random.randint(0, 59)
-	data = "{}-{}-{} {}:{}:{}".format(day, month, year, hours, minutes, seconds)
+	data = "{}-{}-{} {}:{}:{}".format(
+		day, month, year, hours, minutes, seconds)
 	return datetime.strptime(data, "%d-%m-%Y %H:%M:%S")
