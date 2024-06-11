@@ -25,6 +25,9 @@ urlpatterns = [
 	path('', include('store.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-# admin.site.site_header = "Rifas Premiadas"
-# admin.site.site_title = "Gerêncie e venda rifas"
-# admin.site.index_title = "Sistema de Gerenciamento de Rifas"
+if not settings.TESTING:
+	urlpatterns += path("__debug__/", include("debug_toolbar.urls")),
+
+admin.site.site_header = "Rifas Premiadas"
+admin.site.site_title = "Gerêncie e venda rifas"
+admin.site.index_title = "Sistema de Gerenciamento de Rifas"
