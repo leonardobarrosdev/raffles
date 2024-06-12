@@ -42,9 +42,7 @@ class RaffleForm(forms.ModelForm):
 			self.fields['owner'].queryset = owner_queryset
 
 	def save(self, commit=True):
-		import ipdb
 		obj = super().save(commit=False)
-		ipdb.set_trace()
 		obj.owner = self.fields['owner']._get_queryset().first()
 		if commit:
 			obj.save()
