@@ -44,11 +44,6 @@ class Raffle(models.Model):
 	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
-	# def save(self, *args, **kwargs):
-	# 	if self.domain is None:
-	# 		self.domain = SlugiFy(self.name) # type: ignore
-	# 	super().salve(*args, **kwargs)
-
 	def get_absolute_url(self):
 		return reverse('raffle_details', args=[str(self.id)])
 

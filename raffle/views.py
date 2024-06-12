@@ -61,9 +61,7 @@ class CreateView(View):
 			return render(request, self.template_name, self.context)
 		if not request.user.is_authenticated:
 			return redirect('signin')
-		raffle = form.save(commit=False)
-		raffle.owner = request.user
-		raffle.save()
+		raffle = form.save()
 		formset_image = ImageFormSet(request.FILES, instance=raffle)
 		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
 		formset_promotion = PromotionFormSet(instance=raffle)

@@ -15,11 +15,12 @@ class RaffleForm(forms.ModelForm):
 			'title': 'Nome da Rifa',
 			'scheduled_date': 'Data',
 			'number_quantity': 'Quantidade de números',
-			'category': 'Catégorias',
+			'category': 'Categorias',
 			'price': 'Preço',
 			'min_quantity': 'Quantidade mínima',
 			'digital': 'Digital',
-			'description': 'Descrção',
+			'description': 'Descrição',
+			'owner': '',
 		}
 		widgets = {
 			'title': forms.TextInput(attrs={'class': class_default}),
@@ -30,8 +31,24 @@ class RaffleForm(forms.ModelForm):
 			'min_quantity': forms.NumberInput(attrs={'class': class_default}),
 			'digital': forms.NullBooleanSelect(attrs={'class': class_default}),
 			'description': forms.Textarea(attrs={'class': class_default, 'rows': 3, 'cols': 50, 'aria-describedby': 'Descrição de Rifa'}),
-			'owner': forms.TextInput(attrs={'hidden': True})
+			'owner': forms.TextInput(attrs={'readonly': True, 'hidden': True, 'riquerid': 'True'})
 		}
+
+	def __init__(self, *args, **kwargs):
+		super(RaffleForm, self).__init__(*args, **kwargs)
+		owner_queryset = kwargs.pop('owner_queryset', None)
+		self.fields['owner'].required = False
+		if owner_queryset:
+			self.fields['owner'].queryset = owner_queryset
+
+	def save(self, commit=True):
+		import ipdb
+		obj = super().save(commit=False)
+		ipdb.set_trace()
+		obj.owner = self.fields['owner']._get_queryset().first()
+		if commit:
+			obj.save()
+		return obj
 
 
 class ImageForm(forms.ModelForm):
@@ -92,7 +109,9 @@ ImageFormSet = inlineformset_factory(
 	fields=['image'],
 	widgets = {
 		'image': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'img-thumbnail mb-3'}),
-	}
+	},
+	extra=1,
+	can_delete=False
 )
 
 AutomaticBuyFormSet = inlineformset_factory(
