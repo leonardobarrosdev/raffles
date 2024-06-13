@@ -31,22 +31,12 @@ class RaffleForm(forms.ModelForm):
 			'min_quantity': forms.NumberInput(attrs={'class': class_default}),
 			'digital': forms.NullBooleanSelect(attrs={'class': class_default}),
 			'description': forms.Textarea(attrs={'class': class_default, 'rows': 3, 'cols': 50, 'aria-describedby': 'Descrição de Rifa'}),
-			'owner': forms.TextInput(attrs={'readonly': True, 'hidden': True, 'riquerid': 'True'})
+			'owner': forms.TextInput(attrs={'readonly': True, 'hidden': True,})
 		}
 
 	def __init__(self, *args, **kwargs):
 		super(RaffleForm, self).__init__(*args, **kwargs)
-		owner_queryset = kwargs.pop('owner_queryset', None)
 		self.fields['owner'].required = False
-		if owner_queryset:
-			self.fields['owner'].queryset = owner_queryset
-
-	def save(self, commit=True):
-		obj = super().save(commit=False)
-		obj.owner = self.fields['owner']._get_queryset().first()
-		if commit:
-			obj.save()
-		return obj
 
 
 class ImageForm(forms.ModelForm):

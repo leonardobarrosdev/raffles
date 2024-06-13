@@ -34,7 +34,7 @@ def dashboard(request):
 	return render(request, 'admin/dashboard.html', context)
 
 
-@method_decorator(decorators, name='dispatch')
+# @method_decorator(decorators, name='dispatch')
 class CreateView(View):
 	template_name = 'raffle/create.html'
 	context = {}
@@ -61,6 +61,8 @@ class CreateView(View):
 			return render(request, self.template_name, self.context)
 		if not request.user.is_authenticated:
 			return redirect('signin')
+		form = form.save(commit=False)
+		form.owner = request.user
 		raffle = form.save()
 		formset_image = ImageFormSet(request.FILES, instance=raffle)
 		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
