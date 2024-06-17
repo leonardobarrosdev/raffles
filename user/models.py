@@ -24,6 +24,11 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
+	def create_customer(self, email, password=None, **extra_fields):
+		extra_fields.setdefault("is_staff", False)
+		extra_fields.setdefault("is_superuser", False)
+		return self._create_user(email, password, **extra_fields)
+
 	def create_user(self, email, password=None, **extra_fields):
 		extra_fields.setdefault("is_staff", True)
 		extra_fields.setdefault("is_superuser", False)
@@ -44,7 +49,6 @@ class UserManager(BaseUserManager):
 
 
 class UserProfile(AbstractUser):
-	# photo = models.ImageField(upload_to=get_upload_path, default='images/profile.svg')
 	email = models.EmailField(unique=True)
 	cpf = models.CharField(max_length=11, unique=True, null=True, blank=True)
 	phone = models.CharField("contato", max_length=11, null=True, blank=True)

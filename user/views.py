@@ -1,8 +1,8 @@
 from tokenize import generate_tokens
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
@@ -28,7 +28,7 @@ def signup(request):
 	if password != password2:
 		messages.error(request, "Password didn't matched.")
 		return redirect('signup')
-	user = model.objects.create(email, password)
+	user = model.objects.create_customer(email, password)
 	user.first_name = request.POST['fname']
 	user.cpf = request.POST['cpf']
 	user.phone = request.POST['phone']
@@ -84,16 +84,18 @@ def signin(request):
 	if request.method == 'POST':
 		email = request.POST['email']
 		password = request.POST['password']
+		user = {'email': email, 'password': password}
 		user = authenticate(request, email=email, password=password)
 		if user is not None:
 			login(request, user)
+			if not user.is_staff:
+				return redirect("store")
 			return render(request, 'admin/dashboard.html', {'user': user})
 	messages.error(request, "Bad Credentials.")
 	return render(request, 'user/signin.html')
 
 def signout(request):
 	logout(request)
-	messages.success(request, "Logged out successfully!")
 	return redirect('store')
 
 def update_details(request, id):
