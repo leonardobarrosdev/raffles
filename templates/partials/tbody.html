@@ -1,0 +1,23 @@
+{% for product in products %}
+<tr id="item-{{ forloop.counter0 }}">
+  <td><a href="{% url 'product:details' product.id %}">
+    {{ product.title }}
+  </a></td>
+  <td>{{ product.number_quantity }}</td>
+  <td>{{ product.digital }}</td>
+  <td>{{ product.scheduled_date }}</td>
+  <td><a class="btn btn-warning py-2" href="{% url 'product:update' product.id %}">Editar</a></td>
+  <td>
+    <button 
+      type="button"
+      class="btn btn-danger"
+      hx-delete="{% url 'product:delete' product.id %}"
+      hx-confirm="Tem certeza que você quer deletar {{ product.title }}?"
+      hx-target="closest tr"
+      hx-swap="outerHTML swap:500ms"
+      >
+      Deletar
+    </button>
+  </td>
+</tr>
+{% endfor %}
