@@ -1,0 +1,18 @@
+<div class="modal fade" id="modal{{ product_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you have certaintly that you he want delete this Raffle?
+      </div>
+      <form class="modal-footer" action="{% url 'product:delete' product_id %}" method="post">
+        {% csrf_token %}
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
