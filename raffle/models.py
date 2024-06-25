@@ -8,7 +8,7 @@ def get_upload_path(instance, filename):
 	'''Split the name of ext, create a new name with uuid and return the path'''
 	ext = '.' + filename.split('.')[-1]
 	filename = f"{uuid.uuid1()}"[:-18] + ext
-	return os.path.join('images', 'raffle', str(instance.raffle.pk), filename)
+	return os.path.join('images', 'raffle', str(instance.product.id), filename)
 
 
 class Category(models.Model):
@@ -45,15 +45,15 @@ class Raffle(models.Model):
 	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
 	def get_absolute_url(self):
-		return reverse('raffle_details', args=[str(self.id)])
+		return reverse('raffle:details', args=[str(self.id)])
 
 	def __str__(self):
 		return self.title
 
 
 class Image(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='raffle_gallery')
-	image = models.ImageField(upload_to=get_upload_path, default='images/raffle/default.svg')
+	product = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='gallery')
+	image = models.ImageField(upload_to=get_upload_path)
 
 	def __str__(self):
 		return "Image of " + self.product.title

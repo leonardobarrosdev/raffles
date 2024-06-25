@@ -42,10 +42,22 @@ class RaffleForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
 	class Meta:
 		model = Image
-		fields = ['image']
+		fields = '__all__'
 		widgets = {
-			'image': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'img-thumbnail mb-3'}),
+			'product': forms.TextInput(attrs={'hidden': True}),
+			'image': forms.ClearableFileInput(attrs={'type': 'file', 'class': 'bi bi-image mb-3'}),
 		}
+
+	def __init__(self, *args, **kwargs):
+		product = kwargs.pop('product', None)
+		super(ImageForm, self).__init__(*args, **kwargs)
+		if product:
+			self.fields['product'].initial = product
+		self.fields['product'].required = False
+
+	def save(self, commit=True):
+		instance = super(ImageForm, self).save(commit=False)
+		return instance.save() if commit else instance
 
 
 class AutomaticBuyForm(forms.ModelForm):
@@ -91,13 +103,14 @@ class AwardedQuotaForm(forms.ModelForm):
 		}
 
 
-ImageFormSet = inlineformset_factory(
+ImageInlineFormSet = inlineformset_factory(
 	Raffle,
 	Image,
 	fields=['image'],
 	widgets = {
-		'image': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'img-thumbnail mb-3'}),
+		'image': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'bi bi-image mb-3'}),
 	},
+	max_num=5,
 	extra=1,
 	can_delete=False
 )
