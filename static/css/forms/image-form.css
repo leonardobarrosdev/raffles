@@ -1,0 +1,52 @@
+.d-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 0.5em;
+}
+
+.form-group-file > .label-file {
+  font-size: 85px;
+  cursor: pointer;
+  color: gray;
+}
+
+.form-group-file > input[type="file"] {
+  display: none !important;
+}
+
+.image-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.image-inline figure {
+  position: relative;
+}
+
+.image-inline img{
+    width: 85px;
+    height: 85px;
+    position: relative;
+}
+
+.image-inline > figcaption{
+    text-align: center;
+    font-size: 2.4vmin;
+    margin-top: 0.5vmin;
+}
+
+.form-group-file, .image-inline > figure {
+  width: 85px;
+  height: 85px;
+}
+
+.btn-del {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  cursor: pointer;
+  color: gray;
+  padding: 0.2em;
+}

@@ -1,13 +1,37 @@
 {% extends "layouts/base_admin.html" %}
 
 {% block container_header %}
-{% include 'components/breadcrumb.html' with path='raffle_list' path_name='Lista' current='Editar' %}
+{% include 'components/breadcrumb.html' with path='product:list' path_name='Lista' current='Editar' %}
+{% include 'components/alert.html' %}
+<div></div>
 {% endblock %}
 
 {% block container_fluid %}
-  {{ form }}
-  {{ formset_image }}
-  {{ formset_autobuy }}
-  {{ formset_promotion }}
-  {{ formset_quota }}
+<form  action="{{ app_path }}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 my-3">
+    {% for field in form %}
+    <div class="col">
+      <label for="id_{{ field.name }}">{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endfor %}
+  </div>
+  <fieldset>
+    <legend class="mt-3">Imagens do producto</legend>
+    <div class="d-flex">
+      {% for form_image in formset_image %}
+        {{ form_image.image }}
+      {% endfor %}
+    </div>
+    <legend class="mt-3">Compras automáticas</legend>
+    <div class="row row-cols-md-2">
+      {% for field in formset_autobuy %}
+      <div class="col mb-3">{{ field }}</div>
+      {% endfor %}
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-success">Salvar</button>
+</form>
 {% endblock %}

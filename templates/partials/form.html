@@ -1,0 +1,20 @@
+{% for image in images %}
+<div id="mage-{{ forloop.counter0 }}">
+  <img src="{% url 'image.url' %}" width="150px" height="auto">
+  <button
+    type="button"
+    class="btn btn-gray"
+    hx-delete="{% url 'product:image' %}"
+    hx-target="#image-{{ forloop.counter0 }}"
+    hx-swap="outerHTML 500ms"
+  >
+    x
+  </button>
+</div>
+{% endfor %}
+{% for field in form_image %}
+<form action="." method="POST" hx-post="{% url 'product:image' %}">
+  {% csrf_token %}
+  {{ field }}
+</form>  
+{% endfor %}
