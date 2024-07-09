@@ -1,0 +1,13 @@
+<div class="d-row-reverse mb-3">
+  <div class="form-group-file">
+    {% for field in form_image %}
+      {% if field.id_for_label != 'id_product' %}
+        <label for="{{ field.id_for_label }}" class="label-file">
+          <i class="fa-regular fa-image"></i>
+        </label>
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="image-inline"></div>
+</div>

@@ -1,14 +1,15 @@
-import os, uuid
+import os
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 
 def get_upload_path(instance, filename):
-	'''Split the name of ext, create a new name with uuid and return the path'''
-	ext = '.' + filename.split('.')[-1]
-	filename = f"{uuid.uuid1()}"[:-18] + ext
-	return os.path.join('images', 'raffle', str(instance.product.id), filename)
+	'''Split the name of ext, reduce the name if necessary and return the path'''
+	if len(filename) > 10:
+		ext = '.' + filename.split('.')[-1]
+		filename = filename[10] + ext
+	return os.path.join('images', 'product', str(instance.product.id), filename)
 
 
 class Category(models.Model):
@@ -45,7 +46,7 @@ class Raffle(models.Model):
 	# media = models.OneToOneField(MediaContent, on_delete=models.CASCADE, null=true, blank=True)
 
 	def get_absolute_url(self):
-		return reverse('raffle:details', args=[str(self.id)])
+		return reverse('product:details', args=[str(self.id)])
 
 	def __str__(self):
 		return self.title

@@ -74,7 +74,7 @@ TEMPLATES = [
 				'django.contrib.messages.context_processors.messages',
 			],
 			'libraries': {
-				'tag_dictionary': 'templatetags.dictionary',
+				'tag_image': 'templatetags.image',
 			},
 		},
 	},

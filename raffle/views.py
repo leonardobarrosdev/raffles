@@ -1,5 +1,7 @@
-from django.http import HttpResponse
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.serializers import serialize
 from django.contrib.auth.decorators import (
 	login_required,
 	permission_required
@@ -7,19 +9,15 @@ from django.contrib.auth.decorators import (
 from django.contrib import messages
 from django.views import View
 from django.views.decorators.http import require_http_methods
-from django.forms import formset_factory, inlineformset_factory
 from django.utils.decorators import method_decorator
 from core import settings
-from user.models import UserProfile
-from store.models import AutomaticBuy, AwardedQuota, Promotion
-from .models import Raffle, Image, Category
+from .models import Raffle, Image
 from .forms import (
 	RaffleForm,
 	ImageForm,
 	AutomaticBuyFormSet,
 	PromotionFormSet,
-	AwardedQuotaFormSet,
-	ImageInlineFormSet
+	AwardedQuotaFormSet
 )
 
 
@@ -35,36 +33,36 @@ class CreateView(View):
 		form = RaffleForm()
 		form_image = ImageForm()
 		formset_autobuy = AutomaticBuyFormSet()
-		formset_promotion = PromotionFormSet()
-		formset_quota = AwardedQuotaFormSet()
+		# formset_promotion = PromotionFormSet()
+		# formset_quota = AwardedQuotaFormSet()
 		self.context = {
 			'form': form,
 			'form_image': form_image,
 			'formset_autobuy': formset_autobuy,
-			'formset_promotion': formset_promotion,
-			'formset_quota': formset_quota,
+			# 'formset_promotion': formset_promotion,
+			# 'formset_quota': formset_quota,
 		}
 		return render(request, self.template_name, self.context)
 
 	def post(self, request):
 		form = RaffleForm(request.POST)
+		images = request.FILES.getlist('image')
 		if not form.is_valid():
 			self.context['form'] = form
 			return render(request, self.template_name, self.context)
 		if not request.user.is_authenticated:
 			return redirect('signin')
-		raffle = form.save(commit=False)
-		raffle.owner = request.user
-		raffle.save()
-		images = request.FILES.getlist('image')
+		product = form.save(commit=False)
+		product.owner = request.user
+		product.save()
 		for image in images:
-			Image.objects.create(product=raffle, image=image)
-		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
-		formset_promotion = PromotionFormSet(instance=raffle)
-		formset_quota = AwardedQuotaFormSet(instance=raffle)
+			Image.objects.create(product=product, image=image)
+		formset_autobuy = AutomaticBuyFormSet(instance=product)
+		# formset_promotion = PromotionFormSet(instance=product)
+		# formset_quota = AwardedQuotaFormSet(instance=product)
 		if formset_autobuy.is_valid(): formset_autobuy.save()
-		if formset_promotion.is_valid(): formset_promotion.save()
-		if formset_quota.is_valid(): formset_quota.save()
+		# if formset_promotion.is_valid(): formset_promotion.save()
+		# if formset_quota.is_valid(): formset_quota.save()
 		messages.success(request, "Your Raffle has been created succesfully!")
 		return redirect('product:list')
 
@@ -75,51 +73,50 @@ class UpdateView(View):
 	context = {}
 
 	def get(self, request, id):
-		raffle = Raffle.objects.get(id=id)
-		images = Image.objects.filter(product=raffle)
-		form = RaffleForm(instance=raffle)
-		formset_autobuy = AutomaticBuyFormSet(instance=raffle)
+		product = Raffle.objects.get(id=id)
 		self.context = {
-			'form': form,
-			'formset_image': ImageInlineFormSet(instance=raffle),
-			'formset_autobuy': formset_autobuy,
+			'form': RaffleForm(instance=product),
+			'form_image': ImageForm(instance=product),
+			'formset_autobuy': AutomaticBuyFormSet(instance=product),
 		}
 		return render(request, self.template_name, self.context)
 
 	def post(self, request, id):
-		raffle = Raffle.objects.get(id=id)
-		instanced_images = Image.objects.filter(product=raffle)
-		form = RaffleForm(request.POST, instance=raffle)
-		if not form.is_valid():
-			messages.error(request, 'Changes not valids. Retry, please.')
-			return render(request, self.template_name, self.context)
-		raffle = form.save()
-		formset_image = ImageInlineFormSet(request.POST, request.FILES, instance=raffle)
-		if formset_image.is_valid():
-			formset_image.save()
-		# queryset = AutomaticBuy.objects.filter(product=raffle)
-		# formset_autobuy = AutomaticBuyFormSet(request.POST, queryset=queryset)
-		# if formset_autobuy.is_valid(): formset_autobuy.save()
+		product = Raffle.objects.get(id=id)
+		form = RaffleForm(request.POST, instance=product)
+		if form.is_valid():
+			product = form.save()
+		images = request.FILES.getlist('image')
+		gallery = Image.objects.filter(product=product)
+		gallery_filenames = [(obj.image.path).split('/')[-1] for obj in gallery]
+		image_filenames = [image.name for image in images]
+		for index, filename in enumerate(image_filenames):
+			if filename not in gallery_filenames:
+				image = images[index]
+				Image.objects.create(product=product, image=image)
+		formset_autobuy = AutomaticBuyFormSet(request.POST, instance=product)
+		if formset_autobuy.is_valid(): formset_autobuy.save()
 		messages.success(request, 'Successfully updated!')
-		return redirect('raffle:list')
+		return redirect('product:list')
+		# messages.error(request, 'Changes not valids. Retry, please.')
+		# return render(request, self.template_name, self.context)
 
-	def get_data(self, objects):
-		data = {
-			'form-TOTAL_FORMS': str(len(objects)),
-			'form-INITIAL-FORMS': '1',
-		}
-		for i, obj in enumerate(objects):
-			data[f'form-{i}-image'] = obj.image
-		return data
+	def patch(self, request, id):
+		try:
+			product = Raffle.objects.get(id=id)
+			gallery = Image.objects.filter(product=product)
+			gallery_data = serialize('json', gallery)
+			return JsonResponse(gallery_data, safe=False)
+		except Raffle.DoesNotExist:
+			return JsonResponse({'error': 'Product or Image not found'}, status=404)
 
-	def get_image_data(self, images):
-		data = {
-			'form-TOTAL_FORMS': str(len(images)),
-			'form-INITIAL-FORMS': '1',
-		}
-		for image in (images):
-			data[image] = images[image]
-		return data
+	def delete(self, request, id, image_id=None):
+		try:
+			image = Image.objects.get(id=image_id)
+			image.delete()
+			return JsonResponse({'success': 'Image deleted succesfully'}, status=200)
+		except Image.DoesNotExist:
+			return JsonResponse({'error': 'Image not found'}, status=404)
 
 
 @login_required(redirect_field_name='signin')
@@ -142,38 +139,3 @@ def delete(request, id):
 	raffle = get_object_or_404(Raffle, id=id)
 	raffle.delete()
 	return render(request, 'partials/tbody.html')
-
-
-class ImageView(View):
-	template_name = "partials/form.html"
-	context = {
-		'form_image': ImageForm(),
-	}
-
-	def get(self, request):
-		product = request['product']
-		if product:
-			self.context['images'] = Image.objects.filter(product=product)
-		return render(request, self.template_name, self.context)
-
-	def post(self, request):
-		product = request['product']
-		form_image = ImageForm(request)
-		if product and form_image.is_valid():
-			image = form_image(commit=False)
-			image.product = product
-			image.save()
-			self.context['images'] += image
-			if len(request.FILES) < 5:
-				self.context['form_image'] = ImageForm()
-			self.context['form_image'] = None
-		return render(request, self.template_name, self.context)
-
-	def patch(self, request):
-		return render(request, self.template_name, self.context)
-
-	def delete(self, request, id):
-		image = get_object_or_404(Image, id=id)
-		image.delete()
-		self.context['form_image'] = ImageForm()
-		return render(request, self.template_name, self.context)

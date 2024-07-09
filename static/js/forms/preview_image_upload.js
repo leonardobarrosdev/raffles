@@ -1,7 +1,32 @@
 const fileInput = document.getElementById("id_image");
 const imageInline = document.querySelector(".image-inline")
 const btnSubmit = document.querySelector("button[type='submit']")
-let files = []
+let files = "{{ image_path_list }}".split(", ")
+// console.log("{{ image_path_list }}")
+
+function decodeHTMLEntities(text) {
+  let textarea = document.createElement("textarea")
+  textarea.innerHTML = text
+  return textarea.value
+}
+
+function decodeAll(pathList) {
+  decodedListPath = []
+
+  for(path of pathList) {
+    let decodedPath = decodeHTMLEntities(path)
+    decodedListPath.append(dacodedPath)
+  }
+
+  return decodedListPath
+}
+
+// if(files.exists()) {
+//   files = decodeAll(files)
+// }
+
+files = decodeAll(files)
+console.log(files)
 
 function preview() {
   imageInline.innerHTML = ""

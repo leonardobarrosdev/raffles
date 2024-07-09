@@ -22,7 +22,7 @@ from . import views
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('auth/', include('user.urls')),
-	path('raffle/', include('raffle.urls')),
+	path('product/', include('raffle.urls')),
 	path('', include('store.urls')),
 	path('dashboard/', views.dashboard, name='dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

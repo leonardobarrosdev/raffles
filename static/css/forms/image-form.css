@@ -2,13 +2,17 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
+  align-items: top;
   gap: 0.5em;
 }
 
 .form-group-file > .label-file {
-  font-size: 85px;
   cursor: pointer;
   color: gray;
+}
+
+.form-group-file > .label-file i {
+  font-size: 85px;
 }
 
 .form-group-file > input[type="file"] {
@@ -26,15 +30,15 @@
 }
 
 .image-inline img{
-    width: 85px;
-    height: 85px;
-    position: relative;
+  width: 85px;
+  height: 85px;
+  position: relative;
 }
 
 .image-inline > figcaption{
-    text-align: center;
-    font-size: 2.4vmin;
-    margin-top: 0.5vmin;
+  text-align: center;
+  font-size: 2.4vmin;
+  margin-top: 0.5vmin;
 }
 
 .form-group-file, .image-inline > figure {

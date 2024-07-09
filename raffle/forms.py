@@ -6,6 +6,23 @@ from store.models import AutomaticBuy, AwardedQuota, Promotion
 
 class_default = 'form-control mb-3'
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+
 
 class RaffleForm(forms.ModelForm):
 	class Meta:
@@ -40,12 +57,15 @@ class RaffleForm(forms.ModelForm):
 
 
 class ImageForm(forms.ModelForm):
+	image = MultipleFileField()
+
 	class Meta:
 		model = Image
 		fields = '__all__'
 		widgets = {
-			'product': forms.TextInput(attrs={'hidden': True}),
-			'image': forms.ClearableFileInput(attrs={'type': 'file', 'class': 'bi bi-image mb-3'}),
+			'product': forms.TextInput(attrs={'hidden': True,}),
+			'image': forms.TextInput(
+				attrs={'type': 'file', 'accept': 'image/png, image/jpeg', 'multiple': True}),
 		}
 
 	def __init__(self, *args, **kwargs):
@@ -54,6 +74,7 @@ class ImageForm(forms.ModelForm):
 		if product:
 			self.fields['product'].initial = product
 		self.fields['product'].required = False
+		self.fields['image'].required = False
 
 	def save(self, commit=True):
 		instance = super(ImageForm, self).save(commit=False)
@@ -108,7 +129,8 @@ ImageInlineFormSet = inlineformset_factory(
 	Image,
 	fields=['image'],
 	widgets = {
-		'image': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'bi bi-image mb-3'}),
+		'image': forms.ClearableFileInput(
+			attrs={'allow_multiple_selected': True, 'type': 'file', 'class': 'bi bi-image mb-3'}),
 	},
 	max_num=5,
 	extra=1,
