@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Category, Raffle, Image
+from .models import Category, Product, Image
 from store.models import AutomaticBuy, AwardedQuota, Promotion
 
 
@@ -24,9 +24,9 @@ class MultipleFileField(forms.FileField):
         return result
 
 
-class RaffleForm(forms.ModelForm):
+class ProductForm(forms.ModelForm):
 	class Meta:
-		model = Raffle
+		model = Product
 		fields = ['title', 'scheduled_date', 'number_quantity', 'category', 'price', 'min_quantity', 'digital', 'description', 'owner']
 		labels = {
 			'title': 'Nome da Rifa',
@@ -52,7 +52,7 @@ class RaffleForm(forms.ModelForm):
 		}
 
 	def __init__(self, *args, **kwargs):
-		super(RaffleForm, self).__init__(*args, **kwargs)
+		super(ProductForm, self).__init__(*args, **kwargs)
 		self.fields['owner'].required = False
 
 
@@ -125,7 +125,7 @@ class AwardedQuotaForm(forms.ModelForm):
 
 
 ImageInlineFormSet = inlineformset_factory(
-	Raffle,
+	Product,
 	Image,
 	fields=['image'],
 	widgets = {
@@ -138,7 +138,7 @@ ImageInlineFormSet = inlineformset_factory(
 )
 
 AutomaticBuyFormSet = inlineformset_factory(
-	Raffle,
+	Product,
 	AutomaticBuy,
 	fields=['quantity', 'more_popular'],
 	widgets = {
@@ -152,7 +152,7 @@ AutomaticBuyFormSet = inlineformset_factory(
 )
 
 PromotionFormSet = inlineformset_factory(
-	Raffle,
+	Product,
 	Promotion,
 	fields = ['amount', 'price'],
 	widgets = {
@@ -166,7 +166,7 @@ PromotionFormSet = inlineformset_factory(
 )
 
 AwardedQuotaFormSet = inlineformset_factory(
-	Raffle,
+	Product,
 	AwardedQuota,
 	fields = ['number'],
 	widgets = {

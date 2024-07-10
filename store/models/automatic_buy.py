@@ -1,9 +1,9 @@
 from django.db import models
-from raffle.models import Raffle
+from product.models import Product
 
 
 class AutomaticBuy(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.CASCADE)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	quantity = models.PositiveIntegerField(default=0)
 	more_popular = models.BooleanField(default=False)
 

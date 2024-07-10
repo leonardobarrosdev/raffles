@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Category, Image, Raffle
+from .models import Category, Image, Product
 
 admin.site.register(Category)
 admin.site.register(Image)
 
-@admin.register(Raffle)
-class RaffleAdmin(admin.ModelAdmin):
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
 	list_display = ["title", "_owner", "create_at", "scheduled_date"]
 	exclude = ["owner",]
 
@@ -13,7 +13,7 @@ class RaffleAdmin(admin.ModelAdmin):
 		return f"{instance.owner.get_full_name()}"
 
 	def get_queryset(self, request):
-		query = super(RaffleAdmin, self).get_queryset(request)
+		query = super(ProductAdmin, self).get_queryset(request)
 		return query.filter(owner=request.user)
 
 	def save_model(self, request, obj, form, change):

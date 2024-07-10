@@ -22,7 +22,7 @@ class Category(models.Model):
 		return self.name
 
 
-class Raffle(models.Model):
+class Product(models.Model):
 	NUMBER_QUANTITY = {
 		1: 100,
 		2: 200,
@@ -53,7 +53,7 @@ class Raffle(models.Model):
 
 
 class Image(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='gallery')
+	product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='gallery')
 	image = models.ImageField(upload_to=get_upload_path)
 
 	def __str__(self):

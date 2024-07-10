@@ -1,16 +1,16 @@
 import json
 from django.shortcuts import render
-from raffle.models import Raffle, Image
+from product.models import Product, Image
 from .models import Order, OrderItem
 
 
 def store(request):
-	raffles = Raffle.objects.all()[:10]
+	products = Product.objects.all()[:10]
 	images = dict()
-	for raffle in raffles:
-		images[raffle.id] = Image.objects.filter(product=raffle).first()
+	for product in products:
+		images[product.id] = Image.objects.filter(product=product).first()
 	context = {
-		'products': raffles,
+		'products': products,
 		'images': images,
 		'is_authenticated': request.user.is_authenticated
 	}
@@ -43,7 +43,7 @@ def update_item(request):
 	product_id = data['productId']
 	action = data['action']
 	customer = request.user.customer
-	product = Raffle.objects.get(id=product_id)
+	product = Product.objects.get(id=product_id)
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 	order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
 	if action == 'add':

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 	# Third party
 	'django_cleanup.apps.CleanupConfig',
 	# Apps
-	'raffle',
+	'product',
 	'user',
 	'store',
 ]

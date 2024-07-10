@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from raffle.models import Raffle
+from product.models import Product
 
 
 class Order(models.Model):
@@ -21,7 +21,7 @@ class Order(models.Model):
 		shipping = False
 		order_items = self.orderitems_set.all()
 		for order_item in order_items:
-			if order_item.raffle.digital == False:
+			if order_item.product.digital == False:
 				shipping = True
 		return shipping
 
@@ -39,7 +39,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.PROTECT)
+	product = models.ForeignKey(Product, on_delete=models.PROTECT)
 	order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="items")
 	quantity = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
 	date_added = models.DateTimeField(auto_now_add=True)

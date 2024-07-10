@@ -1,7 +1,7 @@
 from django.db import models
-from raffle.models import Raffle
+from product.models import Product
 
 
 class AwardedQuota(models.Model):
-	product = models.ForeignKey(Raffle, on_delete=models.CASCADE, null=True, blank=True)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
 	number = models.PositiveIntegerField(default=0)
