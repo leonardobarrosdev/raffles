@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django.views import View
 from product.models import Product, Image
 from .models import Order, OrderItem
 
@@ -11,8 +12,7 @@ def store(request):
 		images[product.id] = Image.objects.filter(product=product).first()
 	context = {
 		'products': products,
-		'images': images,
-		'is_authenticated': request.user.is_authenticated
+		'images': images
 	}
 	return render(request, 'store/index.html', context)
 
@@ -54,3 +54,19 @@ def update_item(request):
 	if order_item.quantity <= 0:
 		order_item.delete()
 	return JsonResponse('Item was added', safe=False)
+
+
+class RaffleView(View):
+	template_name = 'store/raffle.html'
+	context = {}
+
+	def get(self, request, id):
+		try:
+			product = Product.objects.get(id=id)
+			images = Image.objects.filter(product=product)
+			self.context['product'] = product
+			self.context['images'] = images
+			return render(request, self.template_name, self.context)
+		except raffle.DoesNotExist:
+			message.error(request, 'Raffle does not exist.')
+			return redirect(request, 'store:index')

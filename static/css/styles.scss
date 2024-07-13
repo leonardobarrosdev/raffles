@@ -11,13 +11,14 @@
     font-size: 3.5rem;
   }
 }
+
 .b-example-divider {
   width: 100%;
   height: 3rem;
-  background-color: rgba(0, 0, 0, 0.1);
-  border: solid rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, .1);
+  border: solid rgba(0, 0, 0, .15);
   border-width: 1px 0;
-  box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1), inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
 .b-example-vr {
@@ -27,7 +28,7 @@
 }
 
 .bi {
-  vertical-align: -0.125em;
+  vertical-align: -.125em;
   fill: currentColor;
 }
 
@@ -52,6 +53,7 @@
 .btn-bd-primary {
   --bd-violet-bg: #712cf9;
   --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
   --bs-btn-font-weight: 600;
   --bs-btn-color: var(--bs-white);
   --bs-btn-bg: var(--bd-violet-bg);
@@ -77,5 +79,3 @@
 ul.no-bullets {
   list-style-type: none !important;
 }
-
-/*# sourceMappingURL=styles.css.map */

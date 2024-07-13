@@ -33,14 +33,10 @@ class CreateView(View):
 		form = ProductForm()
 		form_image = ImageForm()
 		formset_autobuy = AutomaticBuyFormSet()
-		# formset_promotion = PromotionFormSet()
-		# formset_quota = AwardedQuotaFormSet()
 		self.context = {
 			'form': form,
 			'form_image': form_image,
 			'formset_autobuy': formset_autobuy,
-			# 'formset_promotion': formset_promotion,
-			# 'formset_quota': formset_quota,
 		}
 		return render(request, self.template_name, self.context)
 
@@ -58,11 +54,7 @@ class CreateView(View):
 		for image in images:
 			Image.objects.create(product=product, image=image)
 		formset_autobuy = AutomaticBuyFormSet(instance=product)
-		# formset_promotion = PromotionFormSet(instance=product)
-		# formset_quota = AwardedQuotaFormSet(instance=product)
 		if formset_autobuy.is_valid(): formset_autobuy.save()
-		# if formset_promotion.is_valid(): formset_promotion.save()
-		# if formset_quota.is_valid(): formset_quota.save()
 		messages.success(request, "Your Raffle has been created succesfully!")
 		return redirect('product:list')
 
@@ -82,7 +74,7 @@ class UpdateView(View):
 		return render(request, self.template_name, self.context)
 
 	def post(self, request, id):
-		product = Raffle.objects.get(id=id)
+		product = Product.objects.get(id=id)
 		form = ProductForm(request.POST, instance=product)
 		if form.is_valid():
 			product = form.save()

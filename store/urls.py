@@ -1,8 +1,11 @@
 from django.urls import path
 from . import views
 
+app_name = 'store'
+
 urlpatterns = [
-	path('', views.store, name='store'),
+	path('', views.store, name='index'),
 	path('cart/', views.cart, name='cart'),
 	path('checkout', views.checkout, name='checkout'),
+	path('raffle/<int:id>/', views.RaffleView.as_view(), name='raffle')
 ]
