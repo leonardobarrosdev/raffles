@@ -3,7 +3,7 @@
   <td><a href="{% url 'product:details' product.id %}">
     {{ product.title }}
   </a></td>
-  <td>{{ product.number_quantity }}</td>
+  <td>{{ product.get_number_quantity_display }}</td>
   <td>{{ product.digital }}</td>
   <td>{{ product.scheduled_date }}</td>
   <td><a class="btn btn-warning py-2" href="{% url 'product:update' product.id %}">Editar</a></td>

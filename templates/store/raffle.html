@@ -1,0 +1,125 @@
+{% extends 'layouts/base_store.html' %}
+
+{% block container %}
+<main class="container py-5">
+	<section class="row py-5 gap-3">
+		<div class="col">
+			<h2 class="text-align-center">{{ product.title }}</h3>
+			<div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+			  <div class="carousel-inner">
+			  	{% for image in images %}
+			    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+			      <img class="bd-placeholder-img" width="100%" height="100%" src="{{ image.image.url }}">
+			    </div>
+			    {% endfor %}
+			  </div>
+			  <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Previous</span>
+			  </button>
+			  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Next</span>
+			  </button>
+			</div>
+		</div>
+	</section>
+	<section class="row py-5">
+		<article>
+			<p><span>Data:</span> 
+				{% if product.scheduled_date %}
+					{{ product.scheduled_date }}
+				{% else %}
+					Indefinida
+				{% endif %}
+			</p>
+			<p><span>Quantidade de números:</span> {{ product.get_number_quantity_display }}</p>
+			<p><span>Preço por número:</span> {{ product.price }}</p>
+			<p><span>Quantidade mínima:</span> {{ product.min_quantity }}</p>
+			<p>
+				<span>Tipo de produto:</span> 
+				{% if product.digital %}
+					digital
+				{% else %}
+					físico
+				{% endif %}
+			</p>
+		</article>
+		{% if product.description %}
+		<article>
+			<h4>Descrição</h4>
+			<p>{{ product.description }}</p>
+		</article>
+		{% endif %}
+	</section>
+	<section>
+		<h4>PARTICIPE E CONTRIBUA PARA UMA BOA CAUSA</h4>
+		<div class="d-flex justify-content-between" id="selecteds">
+			<strong>R$ <span id="totalValue">0,0</span></strong>
+			<button class="btn btn-success" id="pay">Pagar</button>
+		</div>
+		<ul class="d-flex justify-content-end gap-3 no-bullets my-3">
+			<li class="btn btn-outline-secondary">DISPONÍVEL</li>
+			<li class="btn btn-warning">RESERVADO</li>
+			<li class="btn btn-success">PAGO</li>
+		</ul>
+		<div class="container text-center">
+			<ul class="row row-cols-10 gap-2 no-bullets" id="numbers"></ul>
+		</div>
+	</section>
+</main>
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript">
+	const numbers = document.getElementById("numbers")
+	let totalValue = document.getElementById("totalValue")
+	const price = parseFloat("{{ product.price }}".replace(",", "."))
+	const payedNumbers = [10, 5, 32, 22]
+	const reseivedNumbers = [4, 16, 20, 40]
+	const numberQuantityStr = "{{ product.get_number_quantity_display }}"
+	const numberQuantity = Number(numberQuantityStr)
+	const size = numberQuantityStr.length
+	let selectedNumbers = new Array()
+	const styleDisponible = "col btn btn-outline-secondary"
+	const styleReseived = "col btn btn-warning"
+	const stylePayed = "col btn btn-success"
+	const styleReseivedCurrent = "col btn btn-outline-warning"
+
+	document.addEventListener("DOMContentLoaded", async (event) => {
+		for(let number = 1; number < numberQuantity; number++) {
+			let li = document.createElement("li")
+			let paddedNumber = number.toString().padStart(size, "0")
+			li.innerText = paddedNumber
+			li.setAttribute("id", number)
+
+			if(payedNumbers.includes(number)) {
+				li.setAttribute("class", stylePayed)
+			} else if(reseivedNumbers.includes(number)) {
+				li.setAttribute("class", styleReseived)
+			} else {
+				li.setAttribute("class", styleDisponible)
+				li.setAttribute("onClick", `addNumber(${number})`)
+			}
+
+			numbers.appendChild(li)
+		}
+	})
+
+	function addNumber(number) {
+		let elementId = document.getElementById(String(number))
+		
+		if(selectedNumbers.includes(number)) {
+			let index = selectedNumbers.indexOf(number)
+			selectedNumbers.splice(index, 1)
+			elementId.setAttribute("class", styleDisponible)
+		} else {
+			selectedNumbers.push(number)
+			elementId.setAttribute("class", styleReseivedCurrent)
+		}
+		
+		result = price * selectedNumbers.length
+		totalValue.innerText = result.toString().replace(".", ",")
+	}
+</script>
+{% endblock %}
