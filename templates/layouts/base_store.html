@@ -3,10 +3,14 @@
 
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<script type="text/javascript">
+    const csrftoken = "{{ csrf_token }}"
+</script>
 {% endblock %}
 
 {% block content %}
-<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+<!-- <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
   <symbol id="check2" viewBox="0 0 16 16">
     <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
   </symbol>
@@ -55,10 +59,14 @@
       </button>
     </li>
   </ul>
-</div>
-{% include 'components/header.html' %}
+</div> -->
+{% include 'partials/header.html' %}
 
 {% block container %}{% endblock %}
 
-{% include 'components/footer.html' %}
+{% include 'partials/footer.html' %}
+
+<script src="https://kit.fontawesome.com/daf1d276ea.js" crossorigin="anonymous"></script>
+<script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+{% block extrascripts %}{% endblock %}
 {% endblock %}
