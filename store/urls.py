@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'store'
@@ -6,6 +6,6 @@ app_name = 'store'
 urlpatterns = [
 	path('', views.store, name='index'),
 	path('cart/', views.cart, name='cart'),
-	path('checkout', views.checkout, name='checkout'),
-	path('raffle/<int:id>/', views.RaffleView.as_view(), name='raffle')
+	path('checkout/', views.checkout, name='checkout'),
+	path('add-subitems/', views.add_subitems, name="add-subitems"),
 ]

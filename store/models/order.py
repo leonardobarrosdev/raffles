@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from product.models import Product
+from raffle.models import Raffle
 
 
 class Order(models.Model):
 	PAYMENT_STATUS = [
 		('P', 'Pending'),
-		('C', 'Complete'),
+		('C', 'Completed'),
 		('F', 'Failed'),
 	]
 	customer = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
@@ -18,36 +19,33 @@ class Order(models.Model):
 
 	@property
 	def shipping(self):
-		shipping = False
-		order_items = self.orderitems_set.all()
-		for order_item in order_items:
-			if order_item.product.digital == False:
-				shipping = True
-		return shipping
+		return any(item.product.digital == False for item in self.items.all())
 
 	@property
 	def get_total_price(self):
-		order_items = self.OrderItem.all()
-		total = sum([item.get_total() for item in order_items])
-		return total
+		return sum(item.get_total_price() for item in self.items.all())
 
 	@property
 	def get_items_quantity(self):
-		order_items = self.OrderItem.all()
-		total = sum([item.quantity for item in order_items])
-		return total
+		return sum(item.quantity for item in self.items.all())
 
 
 class OrderItem(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.PROTECT)
 	order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="items")
+	product = models.ForeignKey(Product, on_delete=models.PROTECT)
 	quantity = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
 	date_added = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return self.product.name
+		return self.product.title
 
 	@property
-	def get_total(self):
-		total = self.quantity * self.product.price
-		return total
+	def get_total_price(self):
+		return self.quantity * self.product.price
+
+
+class OrderRaffle(OrderItem):
+	raffle = models.ForeignKey(Raffle, on_delete=models.PROTECT)
+
+	def __str__(self):
+		return f"Order Raffle for {self.raffle.product.title} with raffle number {self.raffle.number}"

@@ -1,72 +1,80 @@
 import json
 from django.shortcuts import render
+from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.views import View
+from django.contrib.auth.decorators import login_required
 from product.models import Product, Image
-from .models import Order, OrderItem
+from raffle.models import Raffle
+from .models import Order, OrderItem, OrderRaffle
+from .utils import cart_data_raffle
 
 
 def store(request):
-	products = Product.objects.all()[:10]
 	images = dict()
+	products = Product.objects.all()
 	for product in products:
 		images[product.id] = Image.objects.filter(product=product).first()
-	context = {
-		'products': products,
-		'images': images
-	}
+	context = {'products': products, 'images': images}
 	return render(request, 'store/index.html', context)
 
 def cart(request):
-	if request.user.is_authenticated:
-		customer = request.use.customer
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		items = order.get_items_quantity()
-	else:
-		items = []
-		order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
-	context = {'items': items, 'order': order}
+	context = cart_data_raffle(request)
 	return render(request, 'store/cart.html', context)
 
+def add_subitems(request, product_id):
+	data = set_subitems(request, product_id)
+	return JsonResponse(data, safe=False)
+
 def checkout(request):
-	if request.user.is_authenticated:
-		customer = request.use.customer
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		items = order.get_items_quantity()
-	else:
-		items = []
-		order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
-	context = {'items': items, 'order': order}
+	context = cart_data(request)
 	return render(request, 'store/checkout.html', context)
 
-def update_item(request):
-	data = json.loads(request.data)
-	product_id = data['productId']
-	action = data['action']
-	customer = request.user.customer
-	product = Product.objects.get(id=product_id)
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
-	order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
-	if action == 'add':
-		order_item.quantity = (order_item.quantity + 1)
-	elif action == 'remove':
-		order_item.quantity = (order_item.quantity - 1)
-	order_item.save()
-	if order_item.quantity <= 0:
-		order_item.delete()
-	return JsonResponse('Item was added', safe=False)
+@login_required(redirect_field_name='user:signin')
+def process_mercadopago(request):
+	import mercadopago
 
+	sdk = mercadopago.SDK("ACCESS_TOKEN")
+	request_options = mercadopago.config.RequestOptions()
+	request_options.custom_headers = {
+	    'x-idempotency-key': '<SOME_UNIQUE_VALUE>'
+	}
+	payment_data = {
+	   "transaction_amount": float(request.POST.get("transaction_amount")),
+	   "token": request.POST.get("token"),
+	   "description": request.POST.get("description"),
+	   "installments": int(request.POST.get("installments")),
+	   "payment_method_id": request.POST.get("payment_method_id"),
+	   "payer": {
+	       "email": request.POST.get("email"),
+	       "identification": {
+	           "type": request.POST.get("type"), 
+	           "number": request.POST.get("number")
+	       }
+	   }
+	}
+	payment_response = sdk.payment().create(payment_data, request_options)
+	payment = payment_response["response"]
+	print(payment)
+	return payment
 
-class RaffleView(View):
-	template_name = 'store/raffle.html'
-	context = {}
-
-	def get(self, request, id):
-		try:
-			product = Product.objects.get(id=id)
-			images = Image.objects.filter(product=product)
-			self.context['product'] = product
-			self.context['images'] = images
-			return render(request, self.template_name, self.context)
-		except raffle.DoesNotExist:
-			message.error(request, 'Raffle does not exist.')
-			return redirect(request, 'store:index')
+@login_required(redirect_field_name='user:signin')
+def process_order(request):
+	data = json.loads(request.body)
+	customer = request.user
+	order, created = Order.objects.get_or_create(customer=customer)
+	total = float(data['form']['total'])
+	if total == float(order.get_total_price):
+		order.status = 'C'
+	order.save()
+	if order.shipping == True:
+		ShippingAddress.objects.create(
+			customer=customer,
+			order=order,
+			address=data['shipping']['address'],
+			number=data['shipping']['number'],
+			city=data['shipping']['city'],
+			state=data['shipping']['state'],
+			zipcode=data['shipping']['zipcode']
+		)
+	return JsonResponse(f'Payment {order.get_status_display()}.', safe=True)
