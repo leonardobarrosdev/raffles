@@ -7,7 +7,7 @@
 <main class="container">
   {% include 'components/alert.html' %} 
   <div class="d-flex align-items-center justify-content-center">
-    <form action="{% url 'signin' %}" method="post" id="login-form">{% csrf_token %}
+    <form action="{% url 'user:signin' %}" method="post" id="login-form">{% csrf_token %}
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
       <div class="imput-group my-3">
         <label for="floatingInput">Email address</label>
@@ -23,8 +23,11 @@
           Remember me
         </label>
       </div>
+      {% if request.GET.next %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% endif %}
       <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-      <a class="btn btn-primary w-100 py-2" href="{% url 'signup' %}">Sign up</a>
+      <a class="btn btn-primary w-100 py-2" href="{% url 'user:signup' %}">Sign up</a>
       <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
     </form>
   </div>

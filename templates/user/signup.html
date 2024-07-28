@@ -75,6 +75,9 @@
         Para proseguir você deve aceitar os Termos e condições
       </label>
     </div>
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% endif %}
     <button type="submit" class="btn btn-primary my-3">Cadastrar-se</button>
     <a class="btn btn-primary my-3" href="{% url 'signin' %}">Voltar</a>
   </form>
