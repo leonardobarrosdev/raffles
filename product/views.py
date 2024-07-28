@@ -111,7 +111,7 @@ class UpdateView(View):
 			return JsonResponse({'error': 'Image not found'}, status=404)
 
 
-@login_required(redirect_field_name='signin')
+@login_required(redirect_field_name='user:signin')
 def list(request):
 	try:
 		products = Product.objects.all()
@@ -119,13 +119,13 @@ def list(request):
 	except:
 		return render(request, 'raffle/list.html', {'products': ()})
 
-@login_required(redirect_field_name='signin')
+@login_required(redirect_field_name='user:signin')
 def details(request, id):
 	user = request.user
 	product = Product.objects.filter(owner=user, id=id)
 	return render(request, 'raffle/details.html', {'product': product})
 
-@login_required(redirect_field_name='signin')
+@login_required(redirect_field_name='user:signin')
 @require_http_methods(['DELETE'])
 def delete(request, id):
 	product = get_object_or_404(Product, id=id)
