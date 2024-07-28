@@ -1,0 +1,38 @@
+{% extends 'layouts/base_store.html' %}
+{% load static tag_image %}
+
+{% block container %}
+<main class="container py-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 py-5">
+    {% for product in products %}
+    <div class="col">
+      <div class="card shadow-sm">
+        {% if images|get_image:product.id %}
+        <a href="{% url 'raffle:raffle' product.id %}">
+        <img src="{{ images|get_image:product.id }}" alt="Image of {{ product.title }}" width="100%" height="225">
+        </a>
+        {% else %}
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect>
+          <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+        </svg>
+        {% endif %}
+        <div class="card-body">
+          <p class="card-text">{{ product.title }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar ao carrinho</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Ver detalhes</button>
+            </div>
+            <strong class="">${{ product.price|floatformat:2 }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <span class="alert alert-info text-center mx-auto">
+      Não há productos na sua base de dados.
+    </span>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

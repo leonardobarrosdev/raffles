@@ -8,98 +8,104 @@
 {% block container %}
 {% include 'partials/carousel.html' %}
 <main class="container py-5">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    {% for product in products %}
-    <div class="col">
-      <div class="card shadow-sm">
-        {% if images|get_image:product.id %}
-        <a href="{% url 'store:raffle' product.id %}">
-        <img src="{{ images|get_image:product.id }}" alt="Image of {{ product.title }}" width="100%" height="225">
-        </a>
-        {% else %}
-        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect>
-          <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-        </svg>
-        {% endif %}
-        <div class="card-body">
-          <p class="card-text">{{ product.title }}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar ao carrinho</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Ver detalhes</button>
-            </div>
-            <strong class="">${{ product.price|floatformat:2 }}</strong>
-          </div>
+  <section class="row">
+    <h3 class="text-center">Funcionalidades</h3>
+    <p class="text-center">Conheça mais sobre o que a nossa plataforma pode te oferecer.</p>
+    <div class="row">
+      <div class="col">
+        <div>
+          <i class="fa-solid fa-money-bill"></i>
+        </div>
+        <strong>Pagamentos automático</strong>
+        <p>Receba pagamento automatizados via PIX</p>
+      </div>
+      <div class="col">
+        <div>
+          <i class="fa-solid fa-money-bill"></i>
+        </div>
+        <strong>Pagamentos automático</strong>
+        <p>Receba pagamento automatizados via PIX</p>
+      </div>
+      <div class="col">
+        <div>
+          <i class="fa-solid fa-money-bill"></i>
+        </div>
+        <strong>Pagamentos automático</strong>
+        <p>Receba pagamento automatizados via PIX</p>
+      </div>
+      <div class="col">
+        <div>
+          <i class="fa-solid fa-money-bill"></i>
+        </div>
+        <strong>Pagamentos automático</strong>
+        <p>Receba pagamento automatizados via PIX</p>
+      </div>
+    </div>
+  </section>
+  <section class="row row-cols-md-2">
+    <figure class="col">
+      <img width="240" height="240" src="https://img.freepik.com/fotos-premium/ela-esta-mais-do-que-disposta-a-ajudar-foto-recortada-de-um-agente-de-call-center-feminino-jovem-e-atraente-trabalhando-em-sua-mesa-no-escritorio_590464-2213.jpg?w=740" alt="Ela está mais do que disposta a ajudar. Foto recortada de um agente de call center feminino jovem e atraente trabalhando em sua mesa no escritório.">
+    </figure>
+    <article class="col">
+      <h3>Suporte</h3>
+      <p>Caso tenha qualquer dúvida é só entrar em contato conosco pelo WhatsApp que iremos lhe ajudar o mais rápido possível! Somos referência em suporte ao cliente.</p>
+      <p>Nós também temos uma central de ajuda com artigos explicativos preparada para você tirar todas as suas dúvidas.</p>
+    </article>
+  </section>
+  <section>
+    <div class="card">
+      <strong class="text-center">Rifeiro ou Afiliado</strong>
+      <p class="text-center">Você escolhe como deseja trabalhar.</p>
+    </div>
+  </section>
+  <!-- Overview Video -->
+  <!-- Because use this platform -->
+  <section class="row py-5">
+    <div class="row">
+      <h3>Dúvidas frequentes</h3>
+    </div>
+    <div class="accordion accordion-flush row row-cols-md-2" id="accordionFlushExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            Accordion Item #1
+          </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            Accordion Item #2
+          </button>
+        </h2>
+        <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+            Accordion Item #3
+          </button>
+        </h2>
+        <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+            Accordion Item #3
+          </button>
+        </h2>
+        <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
         </div>
       </div>
     </div>
-    {% empty %}
-    <span class="alert alert-info text-center mx-auto">
-      Não há productos na sua base de dados.
-    </span>
-    {% endfor %}
-  </div>
-  <div class="marketing">
-    <!-- Three columns of text below the carousel -->
-    <section class="row py-5">
-      <div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
-        <h2 class="fw-normal">Heading</h2>
-        <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-      <div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
-        <h2 class="fw-normal">Heading</h2>
-        <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-      <div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
-        <h2 class="fw-normal">Heading</h2>
-        <p>And lastly this, the third column of representative placeholder content.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-    </section><!-- /.row -->
-
-    <!-- START THE FEATURETTES -->
-
-    <hr class="featurette-divider">
-
-    <section class="row featurette">
-      <article class="col-md-7">
-        <h2 class="featurette-heading fw-normal lh-1">First featurette heading. <span class="text-body-secondary">It’ll blow your mind.</span></h2>
-        <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-      </article>
-      <article class="col-md-5">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-      </article>
-    </section>
-
-    <hr class="featurette-divider">
-
-    <section class="row featurette">
-      <div class="col-md-7 order-md-2">
-        <h2 class="featurette-heading fw-normal lh-1">Oh yeah, it’s that good. <span class="text-body-secondary">See for yourself.</span></h2>
-        <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
-      </div>
-      <div class="col-md-5 order-md-1">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-      </div>
-    </section>
-
-    <hr class="featurette-divider">
-
-    <section class="row featurette">
-      <div class="col-md-7">
-        <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span></h2>
-        <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
-      </div>
-      <div class="col-md-5">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-      </div>
-    </section>
-    <hr class="featurette-divider">
-  </div>
+  </section>
 </main>
 {% endblock %}
