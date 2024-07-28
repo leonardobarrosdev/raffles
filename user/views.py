@@ -15,7 +15,7 @@ from .forms import UserProfileForm
 
 def signup(request):
 	if request.user.is_authenticated:
-		return redirect('store')
+		return redirect('store:index')
 	if request.method != 'POST':
 		return render(request, 'user/signup.html')
 	model = get_user_model()
@@ -24,10 +24,10 @@ def signup(request):
 	password2 = request.POST['password2']
 	if model.objects.filter(email=email).exists():
 		messages.error(request, "Email already registered.")
-		return redirect('signup')
+		return redirect('user:signup')
 	if password != password2:
 		messages.error(request, "Password didn't matched.")
-		return redirect('signup')
+		return redirect('user:signup')
 	user = model.objects.create_customer(email, password)
 	user.first_name = request.POST['fname']
 	user.cpf = request.POST['cpf']
@@ -38,7 +38,9 @@ def signup(request):
 	messages.success(request, "Your account has been created succesfully! Please check your email address in order to activate your account.")
 	send_email_welcome(user.first_name, email)
 	_send_confirm_email(request, user)
-	return redirect('signin')
+	if 'next' in request.POST:
+		return redirect(request.POST.get('next'))
+	return redirect('user:signin')
 
 def send_email_welcome(first_name, email):
 	subject = "Welcome to your Website from Raffles!"
@@ -74,13 +76,13 @@ def activate(request, uidb64, token):
 		user.save()
 		login(request, user)
 		messages.success(request, "Your Account has been activated!")
-		return redirect('signin')
+		return redirect('user:signin')
 	messages.error(request, "Activation link is invalid!")
 	return render(request, 'user/signup.html')
 
 def signin(request):
 	if request.user.is_authenticated:
-		return redirect('store')
+		return redirect('store:index')
 	if request.method == 'POST':
 		email = request.POST['email']
 		password = request.POST['password']
@@ -88,15 +90,17 @@ def signin(request):
 		user = authenticate(request, email=email, password=password)
 		if user is not None:
 			login(request, user)
-			if not user.is_staff:
-				return redirect("store")
-			return render(request, 'admin/dashboard.html', {'user': user})
+			if 'next' in request.POST:
+				return redirect(request.POST.get('next'))
+			if user.is_staff:
+				return redirect('dashboard')
+			return redirect("store:index")
 	messages.error(request, "Bad Credentials.")
 	return render(request, 'user/signin.html')
 
 def signout(request):
 	logout(request)
-	return redirect('store')
+	return redirect('store:index')
 
 def update_details(request, id):
 	user_model = get_user_model()
@@ -107,7 +111,7 @@ def update_details(request, id):
 		try:
 			form.save()
 			messages.success(request, "Update succesfully realized!")
-			redirect('user_update_details')
+			redirect('user:update_details')
 		except Exception as e:
 			print("Update is ", e)
 	return render(request, 'user/update_details.html', context)
