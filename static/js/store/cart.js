@@ -1,30 +1,39 @@
-const updateBtn = document.getElementByClassName("update_cart");
+const tbodyFragment = document.querySelector("tbody")
+const itemsQuantity = Number(tbodyFragment.dataset.itemsquantity)
 
-for(i = 0; 1 < updateBtn.length; i++){
-  updateBtn[i].addEventListener("click", () => {
-    const productId = this.dataset.product;
-    const action = this.dataset.action;
-    if(user == "AnonymousUser"){
-      console.log("User is not authenticated");
-    } else {
-      updateUserOrder(productId, action);
-    }
-  });
-};
-
-function updateUserOrder(productId, action){
-  const url = "/update_item"
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      'X-CSRFToken': csrftoken,
-    },
-    body: JSON.stringify({"productId": productId, "action": action})
-  }).then(response) => {
-    return response.json();
-  }.then((data) => {
-    console.log("Data", data);
-    location.reload()
+function cartByCookies() {
+  // create elements for tbody
+  const data = fetch(`/subitems/`, {
+    method: "GET",
   })
+  .then(response => {
+    return response.json()
+  })
+  .catch(error => {
+    console.error("Probablity haven't sub items on cart; ", error)
+  })
+
+  for(let field of data) {
+    let tr = document.createElement("tr")
+    let tdTitle = createElement("td")
+    let tdNumbers = document.createElement("td")
+    let tdPrice = document.createElement("td")
+    let tdQuantity = document.createElement("td")
+
+    tdTitle.innerText = field.title
+    tdNumber.innerText = "#"
+    tdPrice.innerText = field.price
+    tdQuantity.innerText = field.get_total_price
+
+    tr.appendChild(tdTitle)
+    tr.appendChild(tdNumbers)
+    tr.appendChild(tdPrice)
+    tr.appendChild(tdQuantity)
+
+    bodyFragment.appendChild(tr)
+  }
+}
+
+if(itemsQuantity > 0) {
+  cartByCookies()
 }
