@@ -39,47 +39,19 @@
     </ul>
   {% endif %}
 
-  <form action="." method="post" id="register_form" class="row g-3 needs-validateion" novalidate>
+  <form action="." method="post" id="register_form" class="needs-validateion row row-cols-1" novalidate>
     {% csrf_token %}
-    <div class="col-md-4">
-      <label for="fname" class="form-label">Nome</label>
-      <input type="text" class="form-control" name="fname" id="fname" placeholder="Digite seu nome" required>
+    {% for field in form %}
+    <div class="mb-3">
+      {{ field.label }}
+      {{ field }}
     </div>
-    <div class="col-md-4">
-      <label for="email" class="form-label">E-mail</label>
-      <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu melhor E-mail" required>
-    </div>
-    <div class="col-md-4">
-      <label for="cpf" class="form-label">CPF</label>
-      <input type="text" class="form-control" name="cpf" id="cpf" placeholder="000.000.000-00" required data-mask-for-cpf>
-    </div>
-    <div class="col-md-4">
-      <label for="phone" class="form-label">Telefone</label>
-      <input type="tel" class="form-control" name="phone" id="phone" placeholder="(00)00000-0000" required data-mask-for-phone>
-    </div>
-    <div class="col-md-4">
-      <label for="date_birth" class="form-label">Data de nascimento</label>
-      <input type="date" class="form-control" name="date_birth" id="date_birth" required>
-    </div>
-    <div class="col-md-4">
-      <label for="password" class="form-label">Senha</label>
-      <input type="password" class="form-control" name="password" id="password" required>
-    </div>
-    <div class="col-md-4">
-      <label for="password2" class="form-label">Senha</label>
-      <input type="password" class="form-control" name="password2" id="password2" required>
-    </div>
-    <div class="col-md-4 form-check">
-      <input class="form-check-input" type="checkbox" value="" id="termCheck">
-      <label class="form-check-label" for="termCheck">
-        Para proseguir você deve aceitar os Termos e condições
-      </label>
-    </div>
+    {% endfor %}
     {% if request.GET.next %}
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}
-    <button type="submit" class="btn btn-primary my-3">Cadastrar-se</button>
-    <a class="btn btn-primary my-3" href="{% url 'signin' %}">Voltar</a>
+    <button type="submit" class="btn btn-primary mb-3">Cadastrar-se</button>
+    <a class="btn btn-primary mb-3" href="{% url 'user:signin' %}">Voltar</a>
   </form>
 </main>
 

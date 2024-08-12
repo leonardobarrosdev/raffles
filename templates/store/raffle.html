@@ -75,13 +75,6 @@
 {% endblock %}
 
 {% block extrascripts %}
-<script type="text/javascript">
-	const price = parseFloat("{{ product.price }}".replace(",", "."))
-	const numberQuantityStr = "{{ product.get_number_quantity_display }}"
-	const minQuantity = Number("{{ product.min_quantity }}")
-	const payedNumbers = [10, 5, 32, 22]
-	const reseivedNumbers = [4, 16, 20, 40]
-	const user = "{{ user }}"
-</script>
+{{ datas|json_script:"datas" }}
 <script src="{% static 'js/store/product-cart.js' %}" type="text/javascript"></script>
 {% endblock %}

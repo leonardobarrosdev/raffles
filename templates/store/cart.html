@@ -3,38 +3,43 @@
 
 {% block container %}
 <main class="container">
-  <section class="cart-body my-3 py-3">
-    <div class="d-flex justify-content-between">
-      <strong>Items: {{ order.get_items_quantity }}</strong>
-      <strong>Total: {{ order.get_total_price|floatformat:2 }}</strong>
-      <button class="btn btn-success" type="button" name="button"></button>
-    </div>
-  </section>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th scope="col">Item</th>
-        <th scope="col">Price</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Total</th>
-      </tr>
-    </thead>
-    <tbody data-itemsQuantity="{{ order.get_items_quantity }}">
-      {% for item in items %}
-      <tr>
-        <!-- <th scope="row">
-          <img src="{ url item.product.image %}" alt="{{ item.product.title }">
-        </th> -->
-        <th></th>
-        <td>{{ item.title }}</td>
-        <!-- <td><a href="#">Números <i class="fa-solid fa-pen-to-square"></i></a></td> -->
-        <td>{{ item.price }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.get_total_price|floatformat:2 }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <h2>Seu Carrinho de Compras</h2>
+  <div class="d-flex flex-row-reverse row-cols-md-2 gap-3">
+    <section class="col col-md-3 my-3">
+      <div class="d-flex flex-column justify-content-between">
+        <p class="d-flex justify-content-between"><span>Items:</span> <strong>{{ order.get_items_quantity }}</strong></p>
+        <p class="d-flex justify-content-between"><span>Total:</span> <strong>{{ order.get_total_price|floatformat:2 }}</strong></p>
+        <a class="btn btn-success" href="{% url 'store:checkout' %}">Checkout</a>
+      </div>
+    </section>
+    <section class="col col-md-7">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Item</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody data-itemsQuantity="{{ order.get_items_quantity }}">
+          {% for item in items %}
+          <tr>
+            <!-- <th scope="row">
+              <img src="{ url item.product.image %}" alt="{{ item.product.title }">
+            </th> -->
+            <th></th>
+            <td>{{ item.title }}</td>
+            <!-- <td><a href="#">Números <i class="fa-solid fa-pen-to-square"></i></a></td> -->
+            <td>{{ item.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.get_total_price|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
 </main>
 {% endblock %}
