@@ -1,21 +1,31 @@
-const pathname = window.location.pathname
-const productId = pathname.split("/").at(-2)
+const datas = document.getElementById("datas").innerHTML
+const product = JSON.parse(datas)
+const productId = product.id
+const user = "AnonymousUser"
+const payedNumbers = [10, 5, 32, 22]
+const reseivedNumbers = [4, 16, 20, 40]
 const btnAddToCart = document.getElementById("pay")
 const numbers = document.getElementById("numbers")
 const totalValue = document.getElementById("totalValue")
-const numberQuantity = Number(numberQuantityStr)
-const size = numberQuantityStr.length
+const size = String(product.numberQuantity).length
 const productNumbers = new Object()
 const selectedNumbers = new Array()
 const styleDisponible = "col btn btn-outline-secondary"
 const styleReseived = "col btn btn-warning"
 const stylePayed = "col btn btn-success"
 const styleReseivedCurrent = "col btn btn-outline-warning"
-const objCart = JSON.parse(Cookies.get("cart")) || {"cart": []}
-const reseivedCurrentList = objCart[productId]? objCart[productId] : []
+const objCart = {"cart": {}}
+const reseivedCurrentList = new Array()
+
+if(Cookies.get("cart") != undefined) {
+  objCart = JSON.parse(Cookies.get("cart"))
+  reseivedCurrentList.push(objCart["cart"][productId])
+} else {
+  Cookies.set("cart", JSON.stringify(objCart))
+}
 
 document.addEventListener("DOMContentLoaded", async (event) => {
-  for(let number = 1; number < numberQuantity; number++) {
+  for(let number = 1; number < product.numberQuantity; number++) {
     let li = document.createElement("li")
     let paddedNumber = number.toString().padStart(size, "0")
     li.innerText = paddedNumber
@@ -53,7 +63,7 @@ function updateNumber(number) {
     elementId.setAttribute("class", styleReseivedCurrent)
   }
   
-  result = price * selectedNumbers.length
+  result = product.price * selectedNumbers.length
   totalValue.innerText = result.toString().replace(".", ",")
 }
 
@@ -62,7 +72,7 @@ function addUserOrder() {
     selectedNumbers.concat(reseivedCurrentList)
   }
 
-  objCart[productId] = selectedNumbers
+  objCart["cart"][productId] = selectedNumbers
 
   fetch(`/cart/${productId}/`, {
     method: "POST",
@@ -70,9 +80,7 @@ function addUserOrder() {
       "Context-Type": "application/json",
       "X-CSRFToken": csrftoken,
     },
-    body: JSON.stringify({
-      "cart": objCart
-    })
+    body: JSON.stringify(objCart)
   })
   .then(response => {
     return response.json()
@@ -83,8 +91,8 @@ function addUserOrder() {
 }
 
 btnAddToCart.addEventListener("click", () => {
-  // if(selectedNumbers.length < minQuantity) {
-  //   window.alert("Selecione os números", `Quantidade mínima ${minQuantity}`)
+  // if(selectedNumbers.length < product.minQuantity) {
+  //   window.alert("Selecione os números", `Quantidade mínima ${product.minQuantity}`)
   // }
   
   if(objCart.productId) {
