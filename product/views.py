@@ -119,11 +119,15 @@ def list(request):
 	except:
 		return render(request, 'raffle/list.html', {'products': ()})
 
-@login_required(redirect_field_name='user:signin')
+# @login_required(redirect_field_name='user:signin')
+# def details(request, id):
+# 	user = request.user
+# 	product = Product.objects.filter(owner=user, id=id)
+# 	return render(request, 'raffle/details.html', {'product': product})
+
 def details(request, id):
-	user = request.user
-	product = Product.objects.filter(owner=user, id=id)
-	return render(request, 'raffle/details.html', {'product': product})
+	product = Product.objects.get(id=id)
+	return HttpResponse({'product': product})
 
 @login_required(redirect_field_name='user:signin')
 @require_http_methods(['DELETE'])

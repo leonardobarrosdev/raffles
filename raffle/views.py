@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import View
@@ -17,6 +17,11 @@ class RaffleView(View):
 			images = Image.objects.filter(product=product)
 			self.context['product'] = product
 			self.context['images'] = images
+			self.context['datas'] = {
+				'id': product.id,
+				'numberQuantity': product.get_number_quantity_display(),
+				'price': product.price
+			}
 			return render(request, self.template_name, self.context)
 		except product.DoesNotExist:
 			message.error(request, 'Raffle does not exist.')

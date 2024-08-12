@@ -23,12 +23,13 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('auth/', include('user.urls')),
 	path('product/', include('product.urls')),
+	path('raffle/', include('raffle.urls')),
 	path('', include('store.urls')),
 	path('dashboard/', views.dashboard, name='dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if not settings.TESTING:
-	urlpatterns += path("__debug__/", include("debug_toolbar.urls")),
+# if not settings.TESTING:
+# 	urlpatterns += path("__debug__/", include("debug_toolbar.urls")),
 
 admin.site.site_header = "Rifas Premiadas"
 admin.site.site_title = "Gerêncie e venda rifas"

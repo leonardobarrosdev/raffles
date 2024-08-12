@@ -26,6 +26,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+MERCADOPAGO_PUBLIC_KEY = env('MERCADOPAGO_PUBLIC_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
@@ -46,7 +47,8 @@ INSTALLED_APPS = [
 	# Apps
 	'product',
 	'user',
-	'store',
+	'raffle',
+	'store'
 ]
 
 MIDDLEWARE = [
@@ -149,28 +151,28 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-LOGIN_URL = '/signin/'
+LOGIN_URL = '/auth/signin/'
 
 
-TESTING = 'test' in sys.argv
+# TESTING = 'test' in sys.argv
 
-if not TESTING:
-	INTERNAL_IPS = env('ALLOWED_HOSTS').split(' ')
-	INSTALLED_APPS.append("debug_toolbar")
-	MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+# if not TESTING:
+# 	INTERNAL_IPS = env('ALLOWED_HOSTS').split(' ')
+# 	INSTALLED_APPS.append("debug_toolbar")
+# 	MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
-DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.history.HistoryPanel',
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-    'debug_toolbar.panels.profiling.ProfilingPanel',
-]
+# DEBUG_TOOLBAR_PANELS = [
+#     'debug_toolbar.panels.history.HistoryPanel',
+#     'debug_toolbar.panels.versions.VersionsPanel',
+#     'debug_toolbar.panels.timer.TimerPanel',
+#     'debug_toolbar.panels.settings.SettingsPanel',
+#     'debug_toolbar.panels.headers.HeadersPanel',
+#     'debug_toolbar.panels.request.RequestPanel',
+#     'debug_toolbar.panels.sql.SQLPanel',
+#     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#     'debug_toolbar.panels.templates.TemplatesPanel',
+#     'debug_toolbar.panels.cache.CachePanel',
+#     'debug_toolbar.panels.signals.SignalsPanel',
+#     'debug_toolbar.panels.redirects.RedirectsPanel',
+#     'debug_toolbar.panels.profiling.ProfilingPanel',
+# ]

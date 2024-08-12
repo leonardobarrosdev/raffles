@@ -15,7 +15,8 @@ def cookie_cart_raffle(request):
 			items.append(product)
 			order['get_total_price'] += product.price * len(numbers)
 			order['get_items_quantity'] += len(numbers)
-		print(items)
+			if product.digital:
+				order['shipping'] = True
 		return {'order': order, 'items': items}
 	except:
 		return {'order': order, 'items': items}
@@ -26,7 +27,6 @@ def cart_data_raffle(request):
 		try:
 			order, created = Order.objects.get_or_create(customer=customer, status='P')
 			items = order.orderraffle_set.all()
-			# items = OrderRaffle.objects.filter(order=order)
 			return {'order': order, 'items': items}
 		except Order.DoesNotExist:
 			return cookie_cart_raffle(request)

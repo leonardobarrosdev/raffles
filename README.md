@@ -22,11 +22,5 @@ python manage.py createsuperuser --username admin --email admin@example.com
 ```
 
 ### References
-Raffle:
-https://www.youtube.com/watch?v=WcTkr-jrRIM
-
 Token:
 https://docs.djangoproject.com/en/5.0/howto/csrf/
-
-Rifame:
-https://rifeme.com.br/ajude-me-a-ir-para-o-enj/

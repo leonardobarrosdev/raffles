@@ -8,6 +8,7 @@ class ShippingAddress(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
 	address = models.CharField(max_length=300)
 	number = models.PositiveSmallIntegerField()
+	neighborhood = models.CharField(max_length=220, null=True, blank=True)
 	city = models.CharField(max_length=200)
 	state = models.CharField(max_length=2)
 	zipcode = models.IntegerField()

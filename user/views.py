@@ -17,7 +17,8 @@ def signup(request):
 	if request.user.is_authenticated:
 		return redirect('store:index')
 	if request.method != 'POST':
-		return render(request, 'user/signup.html')
+		context = {'form': UserProfileForm()}
+		return render(request, 'user/signup.html', context)
 	model = get_user_model()
 	email = request.POST['email']
 	password = request.POST['password']
@@ -25,19 +26,15 @@ def signup(request):
 	if model.objects.filter(email=email).exists():
 		messages.error(request, "Email already registered.")
 		return redirect('user:signup')
-	if password != password2:
-		messages.error(request, "Password didn't matched.")
+	form = UserProfileForm(request.POST)
+	if not form.is_valid() or password != password2:
 		return redirect('user:signup')
-	user = model.objects.create_customer(email, password)
-	user.first_name = request.POST['fname']
-	user.cpf = request.POST['cpf']
-	user.phone = request.POST['phone']
-	user.date_birth = request.POST['date_birth']
+	user = form.save(commit=False)
 	user.is_active = False
 	user.save()
-	messages.success(request, "Your account has been created succesfully! Please check your email address in order to activate your account.")
-	send_email_welcome(user.first_name, email)
-	_send_confirm_email(request, user)
+	# messages.success(request, "Your account has been created succesfully! Please check your email address in order to activate your account.")
+	# send_email_welcome(user.first_name, email)
+	# _send_confirm_email(request, user)
 	if 'next' in request.POST:
 		return redirect(request.POST.get('next'))
 	return redirect('user:signin')
