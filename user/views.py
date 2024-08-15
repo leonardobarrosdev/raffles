@@ -5,39 +5,40 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, send_mail
+from django.views.generic.base import View
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from core import settings
 from .utils import AppTokenGenerator
-from .forms import UserProfileForm
+from .forms import RegisterForm
+import ipdb
 
 
-def signup(request):
-	if request.user.is_authenticated:
-		return redirect('store:index')
-	if request.method != 'POST':
-		context = {'form': UserProfileForm()}
+class SignupView(View):
+	User = get_user_model()
+
+	def get(self, request):
+		if request.user.is_authenticated:
+			return redirect('store:index')
+		context = {'form': RegisterForm()}
 		return render(request, 'user/signup.html', context)
-	model = get_user_model()
-	email = request.POST['email']
-	password = request.POST['password']
-	password2 = request.POST['password2']
-	if model.objects.filter(email=email).exists():
-		messages.error(request, "Email already registered.")
-		return redirect('user:signup')
-	form = UserProfileForm(request.POST)
-	if not form.is_valid() or password != password2:
-		return redirect('user:signup')
-	user = form.save(commit=False)
-	user.is_active = False
-	user.save()
-	# messages.success(request, "Your account has been created succesfully! Please check your email address in order to activate your account.")
-	# send_email_welcome(user.first_name, email)
-	# _send_confirm_email(request, user)
-	if 'next' in request.POST:
-		return redirect(request.POST.get('next'))
-	return redirect('user:signin')
+
+	def post(self, request):
+		if model.objects.filter(email=email).exists():
+			messages.error(request, "Email already registered.")
+			return redirect('user:signup')
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			# user = form.save(commit=False)
+			# user.is_active = False
+			user.save()
+			# messages.success(request, "Your account has been created succesfully! Please check your email address in order to activate your account.")
+			# send_email_welcome(user.first_name, email)
+			# _send_confirm_email(request, user)
+			return redirect('user:signin')
+
+
 
 def send_email_welcome(first_name, email):
 	subject = "Welcome to your Website from Raffles!"
@@ -71,7 +72,7 @@ def activate(request, uidb64, token):
 		user.is_active = True
 		user.user_permissions.set(['add_raffle', 'view_raffle', 'change_raffle', 'delete_raffle'])
 		user.save()
-		login(request, user)
+		# login(request, user)
 		messages.success(request, "Your Account has been activated!")
 		return redirect('user:signin')
 	messages.error(request, "Activation link is invalid!")
@@ -83,7 +84,6 @@ def signin(request):
 	if request.method == 'POST':
 		email = request.POST['email']
 		password = request.POST['password']
-		user = {'email': email, 'password': password}
 		user = authenticate(request, email=email, password=password)
 		if user is not None:
 			login(request, user)
