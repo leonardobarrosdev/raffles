@@ -4,9 +4,9 @@ from . import views
 app_name = 'user'
 
 urlpatterns = [
-	path("signin/", views.signin, name="signin"),
+	path("activate/<uidb64>/<token>/", views.activate, name="activate"),
+    path("signin/", views.signin, name="signin"),
 	path("signup/", views.SignupView.as_view(), name="signup"),
-	path("signout/", views.signout, name="signout"),
-	path("activate/<uidb64>/<token>", views.activate, name="activate"),
-	path("<str:id>/", views.update_details, name="update_details")
+    path('signout', views.signout, name='signout'),
+	path("<str:id>/", views.UpdateDetailsView.as_view(), name="update_details")
 ]
