@@ -51,9 +51,12 @@ class SignupForm(forms.ModelForm):
 		cd = self.cleaned_data
 		if self.errors:
 			return cd
+		email = self.cleaned_data.get('email')
 		password = cd.get('password')
 		password2 = cd.get('password2')
 		terms = cd.get('terms')
+		if get_user_model().objects.filter(email=email).exists():
+			raise forms.ValidationError('Email already registered.')
 		if not password:
 			raise forms.ValidationError("Password can't be blank")
 		if password != password2:
@@ -61,7 +64,7 @@ class SignupForm(forms.ModelForm):
 		if len(password) < 4:
 			raise forms.ValidationError("Password must be at least 4 characters long")
 		if not terms:
-			raise forms.ValidationError("Yuo need accept the service terms.")
+			raise forms.ValidationError("You need accept the service terms.")
 		return cd
 	
 	def __init__(self, *args, **kwargs):
