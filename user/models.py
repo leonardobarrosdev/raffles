@@ -21,13 +21,11 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError(_("The Email must be set"))
-        # username = extra_fields.get('username')
-        # if username and self.model.objects.filter(username=username).exists():
-        #     raise ValueError(_("The username is already taken"))
         if self.model.objects.filter(email=email).exists():
             raise ValueError(_("The email is already taken"))
         email = self.normalize_email(email)
         user = self.model(username=email, email=email, **extra_fields)
+        user.is_active = False
         user.set_password(password)
         user.save()
         return user
