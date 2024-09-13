@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout, get_user_model, tokens
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, send_mail
 from django.views.generic.base import View
@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from core import settings
 from .utils import AppTokenGenerator
-from .forms import SignupForm
+from .forms import SignupForm, UpdateForm
 import ipdb
 
 
@@ -26,10 +26,8 @@ class SignupView(View):
 
 	def post(self, request):
 		form = SignupForm(request.POST)
-		if self.User.objects.filter(email=request.POST['email']).exists():
-			messages.error(request, "Email already registered.")
-			return render(request, self.template_name, {'form': form})
 		if form.is_valid():
+			form.cleaned_data['email']
 			form.cleaned_data['password2']
 			form.cleaned_data['terms']
 			user = form.save(commit=False)
@@ -110,13 +108,13 @@ class UpdateDetailsView(View):
 
 	def get(self, request, id):
 		user = get_object_or_404(self.User, id=id)
-		form = SignupForm(instance=user)
+		form = UpdateForm(instance=user)
 		context = {'form': form, 'user': user}
 		return render(request, self.template_name, context)
 
 	def post(self, request, id):
 		user = get_object_or_404(self.User, id=id)
-		form = SignupForm(request.POST, instance=user)
+		form = UpdateForm(request.POST, instance=user)
 		if form.is_valid():
 			form.save()
 			messages.success(request, "Update succesfully realized!")
