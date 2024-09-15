@@ -2,29 +2,29 @@ from django.test import TestCase, Client, tag
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.core import mail
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
-from ..utils import AppTokenGenerator
-from ..models import UserProfile
+from user.authentify.token import AppTokenGenerator
 from ..forms import SignupForm
 from ..views import send_email_welcome
-import ipdb
+
 
 class SignupViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.User = get_user_model()
         self.mocked_email = 'test@example.com'
-        self.user = self.User.objects.create(
-            email=self.mocked_email,
-            password='testpassword',
-            first_name='Test',
-            last_name='User',
-            cpf='12345678901',
-            phone='12345678901',
-            date_birth='2000-01-01'
-        )
+        self.data = {
+            'email': self.mocked_email,
+            'password': 'testpassword',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'cpf': '12345678901',
+            'phone': '12345678901',
+            'date_birth': '2000-01-01'
+        }
+        self.user = self.User.objects.create_user(**self.data)
 
     def tearDown(self) -> None:
         return super().tearDown()
@@ -37,7 +37,7 @@ class SignupViewTest(TestCase):
         self.assertIsInstance(response.context['form'], SignupForm)
 
     @tag('signup')
-    def test_signup_view_post_success(self):
+    def test_signup_view_post(self):
         response = self.client.post(reverse('user:signup'), {
             'email': 'newuser@example.com',
             'first_name': 'New',
@@ -50,24 +50,15 @@ class SignupViewTest(TestCase):
             'terms': True
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(UserProfile.objects.count(), 2)
-        self.assertTrue(UserProfile.objects.filter(email='newuser@example.com').exists())
+        self.assertEqual(self.User.objects.count(), 2)
+        self.assertTrue(self.User.objects.filter(email='newuser@example.com').exists())
 
     @tag('signup')
     def test_signup_view_post_failure(self):
-        self.User.objects.create(
-            first_name='Exist',
-            last_name='User',
-            email='exist@example.com',
-            cpf='12345679801',
-            phone='12325678901',
-            date_birth='2000-01-01',
-            password='newpassword'
-        )
         response = self.client.post(reverse('user:signup'), {
             'first_name': 'Exist',
             'last_name': 'User',
-            'email': 'exist@example.com',
+            'email': '',
             'cpf': '12345679801',
             'phone': '12325678901',
             'date_birth': '2000-01-01',
@@ -81,7 +72,7 @@ class SignupViewTest(TestCase):
 
     @tag('send_email')
     def test_send_email_welcome_view(self):
-        user = UserProfile.objects.create_user(
+        user = self.User.objects.create_user(
             first_name='New',
             email='newuser@example.com',
             password='newpassword'
@@ -91,19 +82,19 @@ class SignupViewTest(TestCase):
         self.assertEqual(mail.outbox[0].to, ['newuser@example.com'])
         self.assertEqual(mail.outbox[0].subject, 'Welcome to your Website from Raffles!')
 
-    @tag('activate')
-    def test_activate_view(self):
+    @tag('active')
+    def test_active_view(self):
         token = AppTokenGenerator().make_token(self.user)
-        uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
+        uidb64 = urlsafe_base64_encode(force_bytes(self.user.id))
         activate_url = reverse('user:activate', kwargs={'uidb64': uidb64, 'token': token})
         response = self.client.get(activate_url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('user:signin'), 302, 302)
-        self.assertTrue(UserProfile.objects.get(pk=self.user.pk).is_active)
+        self.assertRedirects(response, reverse('user:signin'))
+        self.assertTrue(self.User.objects.get(id=self.user.id).is_active)
 
     @tag('signin')
     def test_signin_view(self):
-        request = self.client.post(reverse('user:signin')).wsgi_request
+        request = self.client.get(reverse('user:signin')).wsgi_request
         current_site = get_current_site(request)
         protocol = 'https' if request.is_secure() else 'http'
         activate_url = reverse('user:activate', kwargs={
@@ -111,25 +102,22 @@ class SignupViewTest(TestCase):
             'token': AppTokenGenerator().make_token(self.user)
         })
         self.client.get('%s://%s%s' % (protocol, current_site.domain, activate_url))
-        response = self.client.post(reverse('user:signin'), {
+        response = self.client.post(reverse('user:signin'), data={
             'email': self.mocked_email,
             'password': 'testpassword'
         })
-        response = self.client.get(reverse('user:signin'))
         self.assertIsNotNone(current_site)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('store:home'), 302, 302)
+        self.assertTrue(self.client.session['_auth_user_id'])
+        self.assertRedirects(response, reverse('store:home'))
     
     @tag('signin')
     def test_signin_view_failure(self):
-        self.User.objects.filter(email=self.mocked_email).update(is_active=True)
-        response = self.client.post(reverse('user:signin'), {
+        response = self.client.post(reverse('user:signin'), data={
             'email': 'error@example.com',
             'password': 'testpassword'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response, 'user/signin.html')
-        self.assertFormError(response, 'form', 'email', 'Email or password is incorrect.')
+        self.assertRedirects(response, reverse('user:signin'))
 
     def test_signout_view(self):
         response = self.client.get(reverse('user:signout'))

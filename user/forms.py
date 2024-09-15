@@ -69,3 +69,36 @@ class SignupForm(forms.ModelForm):
 	
 	def __init__(self, *args, **kwargs):
 		super(SignupForm, self).__init__(*args, **kwargs)
+
+
+class UpdateForm(forms.ModelForm):
+	class Meta:
+		model = get_user_model()
+		fields = ['first_name', 'last_name', 'email', 'cpf', 'phone', 'date_birth', 'password']
+		labels = {
+			'first_name': 'Nome',
+			'last_name': 'Sobrenome',
+			'email': 'E-mail',
+			'cpf': 'CPF',
+			'phone': 'Telefone',
+			'date_birth': 'Data de nescimento',
+			'password': _('Password')
+		}
+		widgets = {
+			'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+			'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+			'email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control'}),
+			'cpf': forms.TextInput(attrs={'type': 'cpf', 'class': 'form-control'}),
+			'phone': forms.TextInput(attrs={'type': 'tel', 'class': 'form-control', 'minlength': 9, 'maxlength': 14}),
+			'date_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+			'password': forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control'})
+		}
+		help_texts = {
+			'first_name': _('Name'),
+			'last_name': _('Last name'),
+			'email': 'E-mail',
+			'cpf': 'CPF',
+			'phone': _('Cell phone'),
+			'date_birth': _('Date of birth'),
+			'password': _('Password')
+		}

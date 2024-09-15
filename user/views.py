@@ -9,9 +9,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from core import settings
-from .utils import AppTokenGenerator
+from user.authentify.token import AppTokenGenerator
 from .forms import SignupForm, UpdateForm
-import ipdb
 
 
 class SignupView(View):
@@ -84,16 +83,15 @@ def activate(request, uidb64, token):
 def signin(request):
 	if request.user.is_authenticated:
 		return redirect('store:home')
-	if not request.user.is_active:
-		messages.error(request, "Your account is not activated yet.")
-		return redirect('user:signin')
 	if request.method == 'POST':
-		email = request.POST['email']
-		password = request.POST['password']
+		email = request.POST.get('email')
+		password = request.POST.get('password')
 		user = authenticate(request, email=email, password=password)
-		if user is not None:
+		if user is not None and user.is_active:
 			login(request, user)
 			return redirect(request.POST.get('next', "store:home"))
+		messages.error(request, "Your account is not activated yet; See your email address.")
+		return redirect('user:signin')
 	messages.error(request, "Bad Credentials.")
 	return render(request, 'user/signin.html')
 
