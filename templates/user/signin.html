@@ -7,7 +7,7 @@
 <main class="container">
   {% include 'components/alert.html' %} 
   <div class="d-flex align-items-center justify-content-center">
-    <form action="{% url 'user:signin' %}" method="post" id="login-form">{% csrf_token %}
+    <form action="{% url 'user:signin' %}" method="POST" id="login-form">{% csrf_token %}
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
       <div class="imput-group my-3">
         <label for="floatingInput">Email address</label>

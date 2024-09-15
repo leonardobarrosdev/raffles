@@ -75,7 +75,7 @@
       var digit = e.key.replace(/\D/g, '');
       var value = $(this).val().replace(/\D/g, '');
       var size = value.concat(digit).length;
-      $(this).mask((size > 8 and size <= 14) ? '(00)00000-0000' : '+00 (00)00000-0000');
+      $(this).mask((size > 8 && size <= 14) ? '(00)00000-0000' : '+00 (00)00000-0000');
     });
 </script>
 <!-- <script type="text/javascript" src="{% static 'utils/normalize.js' %}"></script> -->
