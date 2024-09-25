@@ -1,5 +1,5 @@
-# Raffles API
-Yuor API for Raffles manage
+# Web Rifas
+Yuor Web Site for Raffles manage
 
 
 ## Deploy
@@ -24,3 +24,15 @@ python manage.py createsuperuser --username admin --email admin@example.com
 ### References
 Token:
 https://docs.djangoproject.com/en/5.0/howto/csrf/
+
+Raffle:
+https://www.youtube.com/watch?v=WcTkr-jrRIM
+
+Rifame:
+https://rifeme.com.br/ajude-me-a-ir-para-o-enj/
+
+Sistema de Rifas:
+https://www.youtube.com/watch?v=vEzBjPtRjNk
+
+Rifei:
+https://rifei.com.br/?utm_source=googleads&utm_medium=search&utm_campaign=campanhas&gad_source=1&gclid=EAIaIQobChMI08mY7KyphwMV3kVIAB3xygLSEAAYAiAAEgIJNfD_BwE

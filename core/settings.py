@@ -45,10 +45,10 @@ INSTALLED_APPS = [
 	# Third party
 	'django_cleanup.apps.CleanupConfig',
 	# Apps
-	'product',
-	'user',
-	'raffle',
-	'store'
+	'apps.product',
+	'apps.user',
+	'apps.raffle',
+	'apps.store'
 ]
 
 MIDDLEWARE = [

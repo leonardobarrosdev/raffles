@@ -1,9 +1,9 @@
 <form class="d-flex flex-column justify-content-between"
-  hx-post="{% url 'store:shipping' %}"
+  hx-patch="{% url 'store:checkout' %}"
   hx-target="#change"
   hx-swap="outerHTML"
 >
-  {% for field in form %}
+  {% for field in form_shipping %}
   <div class="form-group">
     {{ field.label }}
     {{ field }}

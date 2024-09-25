@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "raffles"
+name = "core"
 version = "0.1.0"
 description = "Ecomerce to Raffles"
 authors = ["Leonardo Barros <leonardobarrosdw@gmail.com>"]
