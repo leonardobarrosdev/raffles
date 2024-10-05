@@ -2,6 +2,15 @@ from django.contrib.auth import get_user_model
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+WIDGETS = {
+	'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+	'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+	'email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control'}),
+	'cpf': forms.TextInput(attrs={'type': 'cpf', 'class': 'form-control'}),
+	'phone': forms.TextInput(attrs={'type': 'tel', 'class': 'form-control', 'minlength': 9, 'maxlength': 14}),
+	'date_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+	'password': forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control'})
+}
 
 class SignupForm(forms.ModelForm):
 	password2 = forms.CharField(
@@ -27,15 +36,7 @@ class SignupForm(forms.ModelForm):
 			'date_birth': 'Data de nescimento',
 			'password': 'Senha'
 		}
-		widgets = {
-			'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-			'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-			'email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control'}),
-			'cpf': forms.TextInput(attrs={'type': 'cpf', 'class': 'form-control'}),
-			'phone': forms.TextInput(attrs={'type': 'tel', 'class': 'form-control', 'minlength': 9, 'maxlength': 14}),
-			'date_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-			'password': forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control'})
-		}
+		widgets = WIDGETS
 		help_texts = {
 			'first_name': _('Name'),
 			'last_name': _('Last name'),
@@ -84,15 +85,7 @@ class UpdateForm(forms.ModelForm):
 			'date_birth': 'Data de nescimento',
 			'password': _('Password')
 		}
-		widgets = {
-			'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-			'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-			'email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control'}),
-			'cpf': forms.TextInput(attrs={'type': 'cpf', 'class': 'form-control'}),
-			'phone': forms.TextInput(attrs={'type': 'tel', 'class': 'form-control', 'minlength': 9, 'maxlength': 14}),
-			'date_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-			'password': forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control'})
-		}
+		widgets = WIDGETS
 		help_texts = {
 			'first_name': _('Name'),
 			'last_name': _('Last name'),

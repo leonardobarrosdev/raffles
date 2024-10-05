@@ -1,3 +1,4 @@
+import ipdb
 from django.test import TestCase, Client, tag
 from django.urls import reverse
 from django.utils.encoding import force_bytes
@@ -5,39 +6,39 @@ from django.core import mail
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
+
 from apps.user.authentify.token import AppTokenGenerator
 from ..forms import SignupForm
 from ..views import send_email_welcome
 
 
 class SignupViewTest(TestCase):
+    fixtures = ['fixtures/user_fixture.json']
+
     def setUp(self):
         self.client = Client()
         self.User = get_user_model()
-        self.mocked_email = 'test@example.com'
-        self.data = {
-            'email': self.mocked_email,
-            'password': 'testpassword',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'cpf': '12345678901',
-            'phone': '12345678901',
-            'date_birth': '2000-01-01'
-        }
-        self.user = self.User.objects.create_user(**self.data)
+        self.mocked_email = 'john@company.com'
+        self.user = self.User.objects.get(email=self.mocked_email)
+        self.url = reverse('user:signup')
 
     def tearDown(self) -> None:
         return super().tearDown()
     
     @tag('signup')
-    def test_signup_view_get(self):
-        response = self.client.get(reverse('user:signup'))
+    def test_signup_view_get_success(self):
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user/signup.html')
         self.assertIsInstance(response.context['form'], SignupForm)
 
+    def test_signout_view_get_failure(self):
+        response = self.client.get(self.url[:-2])
+        self.assertEqual(response.status_code, 404)
+        self.assertNotIn(self.url, response)
+
     @tag('signup')
-    def test_signup_view_post(self):
+    def test_signup_view_post_success(self):
         response = self.client.post(reverse('user:signup'), {
             'email': 'newuser@example.com',
             'first_name': 'New',
@@ -50,7 +51,7 @@ class SignupViewTest(TestCase):
             'terms': True
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.User.objects.count(), 2)
+        self.assertEqual(self.User.objects.count(), 11)
         self.assertTrue(self.User.objects.filter(email='newuser@example.com').exists())
 
     @tag('signup')
@@ -69,6 +70,16 @@ class SignupViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user/signup.html')
         self.failIf(response.context['form'].is_valid())
+
+
+class EmailViewTest(TestCase):
+    fixtures = ['fixtures/user_fixture.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.User = get_user_model()
+        self.mocked_email = 'john@company.com'
+        self.user = self.User.objects.get(email=self.mocked_email)
 
     @tag('send_email')
     def test_send_email_welcome_view(self):
@@ -92,8 +103,18 @@ class SignupViewTest(TestCase):
         self.assertRedirects(response, reverse('user:signin'))
         self.assertTrue(self.User.objects.get(id=self.user.id).is_active)
 
+
+class SigninViewTest(TestCase):
+    fixtures = ['fixtures/user_fixture.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.User = get_user_model()
+        self.mocked_email = 'john@company.com'
+        self.user = self.User.objects.get(email=self.mocked_email)
+
     @tag('signin')
-    def test_signin_view(self):
+    def test_signin_view_success(self):
         request = self.client.get(reverse('user:signin')).wsgi_request
         current_site = get_current_site(request)
         protocol = 'https' if request.is_secure() else 'http'
@@ -103,8 +124,7 @@ class SignupViewTest(TestCase):
         })
         self.client.get('%s://%s%s' % (protocol, current_site.domain, activate_url))
         response = self.client.post(reverse('user:signin'), data={
-            'email': self.mocked_email,
-            'password': 'testpassword'
+            'email': self.mocked_email, 'password': '123456'
         })
         self.assertIsNotNone(current_site)
         self.assertTrue(self.client.session['_auth_user_id'])
@@ -119,27 +139,60 @@ class SignupViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('user:signin'))
 
+
+class SignoutViewTest(TestCase):
+    fixtures = ['fixtures/user_fixture.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.User = get_user_model()
+        self.mocked_email = 'john@company.com'
+        self.user = self.User.objects.get(email=self.mocked_email)
+
     def test_signout_view(self):
         response = self.client.get(reverse('user:signout'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('store:home'))
         self.assertFalse('_auth_user_id' in self.client.session)
 
-    def test_update_details_view(self):
-        self.client.login(email='test@example.com', password='testpassword')
-        user = self.User.objects.get(email='test@example.com')
-        update_details_url = reverse('user:update_details', kwargs={'id': user.id})
-        response = self.client.post(update_details_url, {
+# Tests not valid
+class UpdateDetailsViewTest(TestCase):
+    fixtures = ['fixtures/user_fixture.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.User = get_user_model()
+        self.mocked_email = 'john@company.com'
+        self.user = self.User.objects.get(email=self.mocked_email)
+
+    def test_details_view_success(self):
+        self.client.login(email=self.mocked_email, password='123456')
+        ipdb.set_trace()
+        response = self.client.get(reverse('user:update_details', kwargs={'pk': int(self.user.pk)}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_details_view_error(self):
+        response = self.client.get(reverse('user:update_details', kwargs={'pk': int(self.user.pk)}))
+        self.assertEqual(response.status_code, 401)
+
+    def test_update_view_success(self):
+        self.client.login(email=self.mocked_email, password='123456')
+        url = reverse('user:update_details', kwargs={'pk': int(self.user.pk)})
+        response = self.client.post(url, {
             'first_name': 'John',
             'last_name': 'Doe',
             'phone': '31996692393',
-            'email': user.email,
-            'cpf': user.cpf,
-            'date_birth': user.date_birth,
-            'password': 'testpassword'
+            'email': self.mocked_email,
+            'password': '123456'
         })
-        updated_user = self.User.objects.get(id=user.id)
+        updated_user = self.User.objects.get(pk=self.user.pk)
         self.assertEqual(updated_user.first_name, 'John')
         self.assertEqual(updated_user.last_name, 'Doe')
         self.assertEqual(updated_user.phone, '31996692393')
         self.assertEqual(response.status_code, 302)
+
+    def test_update_view_error(self):
+        url = reverse('user:update_details', kwargs={'pk': int(self.user.pk)})
+        with self.assertRaises(ValueError):
+            self.client.post(url, {})
+

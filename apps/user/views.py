@@ -1,3 +1,4 @@
+import ipdb
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
@@ -104,17 +105,17 @@ class UpdateDetailsView(View):
 	User = get_user_model()
 	template_name = 'user/update_details.html'
 
-	def get(self, request, id):
-		user = get_object_or_404(self.User, id=id)
+	def get(self, request, pk):
+		user = get_object_or_404(self.User, pk=pk)
 		form = UpdateForm(instance=user)
-		context = {'form': form, 'user': user}
+		context = {'form': form}
 		return render(request, self.template_name, context)
 
-	def post(self, request, id):
-		user = get_object_or_404(self.User, id=id)
+	def post(self, request, pk):
+		user = get_object_or_404(self.User, pk=pk)
 		form = UpdateForm(request.POST, instance=user)
 		if form.is_valid():
 			form.save()
 			messages.success(request, "Update succesfully realized!")
-			return redirect('user:update_details', id=id)
+			return redirect('user:update_details', pk=pk)
 		return render(request, self.template_name, {'form': form, 'user': user})
