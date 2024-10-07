@@ -1,0 +1,170 @@
+[{
+  "model": "product.product",
+  "pk": 1,
+  "fields": {
+    "title": "Cell Phone",
+    "scheduled_date": null,
+    "number_quantity": 4,
+    "price": "0.50",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "IPhone 12 + pro on box",
+    "create_at": "2024-10-01T20:15:43.815Z",
+    "updated_at": "2024-10-01T20:15:43.815Z",
+    "owner": 10,
+    "category": 1
+  }
+},
+{
+  "model": "product.product",
+  "pk": 2,
+  "fields": {
+    "title": "Moto G9",
+    "scheduled_date": null,
+    "number_quantity": 4,
+    "price": "0.50",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "New, blank, with suport and phone charger",
+    "create_at": "2024-10-01T20:18:36.737Z",
+    "updated_at": "2024-10-01T20:18:36.737Z",
+    "owner": 9,
+    "category": 1
+  }
+},
+{
+  "model": "product.product",
+  "pk": 3,
+  "fields": {
+    "title": "Samsung Galaxy S21",
+    "scheduled_date": null,
+    "number_quantity": 5,
+    "price": "0.60",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Brand new Samsung Galaxy S21",
+    "create_at": "2024-10-01T20:20:00.000Z",
+    "updated_at": "2024-10-01T20:20:00.000Z",
+    "owner": 8,
+    "category": 1
+  }
+},
+{
+  "model": "product.product",
+  "pk": 4,
+  "fields": {
+    "title": "MacBook Pro",
+    "scheduled_date": null,
+    "number_quantity": 6,
+    "price": "1.00",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Apple MacBook Pro 16-inch",
+    "create_at": "2024-10-01T20:21:00.000Z",
+    "updated_at": "2024-10-01T20:21:00.000Z",
+    "owner": 7,
+    "category": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 5,
+  "fields": {
+    "title": "Xbox Series X",
+    "scheduled_date": null,
+    "number_quantity": 4,
+    "price": "0.75",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Xbox Series X 1TB console",
+    "create_at": "2024-10-01T20:22:00.000Z",
+    "updated_at": "2024-10-01T20:22:00.000Z",
+    "owner": 6,
+    "category": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 6,
+  "fields": {
+    "title": "PlayStation 5",
+    "scheduled_date": null,
+    "number_quantity": 5,
+    "price": "0.80",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Sony PlayStation 5 Console",
+    "create_at": "2024-10-01T20:23:00.000Z",
+    "updated_at": "2024-10-01T20:23:00.000Z",
+    "owner": 5,
+    "category": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 7,
+  "fields": {
+    "title": "Smart TV LG 55\"",
+    "scheduled_date": null,
+    "number_quantity": 4,
+    "price": "1.20",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "55-inch LG 4K UHD Smart TV",
+    "create_at": "2024-10-01T20:24:00.000Z",
+    "updated_at": "2024-10-01T20:24:00.000Z",
+    "owner": 4,
+    "category": 4
+  }
+},
+{
+  "model": "product.product",
+  "pk": 8,
+  "fields": {
+    "title": "Apple Watch Series 7",
+    "scheduled_date": null,
+    "number_quantity": 5,
+    "price": "0.45",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Apple Watch Series 7 GPS",
+    "create_at": "2024-10-01T20:25:00.000Z",
+    "updated_at": "2024-10-01T20:25:00.000Z",
+    "owner": 3,
+    "category": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 9,
+  "fields": {
+    "title": "Gaming Laptop ASUS",
+    "scheduled_date": null,
+    "number_quantity": 6,
+    "price": "1.50",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "ASUS ROG Strix G15 Gaming Laptop",
+    "create_at": "2024-10-01T20:26:00.000Z",
+    "updated_at": "2024-10-01T20:26:00.000Z",
+    "owner": 2,
+    "category": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 10,
+  "fields": {
+    "title": "Sony WH-1000XM4",
+    "scheduled_date": null,
+    "number_quantity": 4,
+    "price": "0.35",
+    "min_quantity": 1,
+    "digital": false,
+    "description": "Sony Wireless Noise Cancelling Headphones",
+    "create_at": "2024-10-01T20:27:00.000Z",
+    "updated_at": "2024-10-01T20:27:00.000Z",
+    "owner": 1,
+    "category": 5
+  }
+}]

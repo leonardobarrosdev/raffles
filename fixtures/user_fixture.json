@@ -2,7 +2,7 @@
   "model": "user.userprofile",
   "pk": 1,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": true,
     "username": "admin",
@@ -23,7 +23,7 @@
   "model": "user.userprofile",
   "pk": 2,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": true,
     "username": "marth02",
@@ -44,7 +44,7 @@
   "model": "user.userprofile",
   "pk": 3,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "john_doe",
@@ -65,7 +65,7 @@
   "model": "user.userprofile",
   "pk": 4,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "jane_doe",
@@ -86,7 +86,7 @@
   "model": "user.userprofile",
   "pk": 5,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "alice_wonder",
@@ -107,7 +107,7 @@
   "model": "user.userprofile",
   "pk": 6,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "bob_marley",
@@ -128,7 +128,7 @@
   "model": "user.userprofile",
   "pk": 7,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "charlie_brown",
@@ -149,7 +149,7 @@
   "model": "user.userprofile",
   "pk": 8,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "diana_prince",
@@ -170,7 +170,7 @@
   "model": "user.userprofile",
   "pk": 9,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "tony_stark",
@@ -191,7 +191,7 @@
   "model": "user.userprofile",
   "pk": 10,
   "fields": {
-    "password": "123456",
+    "password": "pbkdf2_sha256$720000$uglbknzQKpZ2KbthxX1gYc$7liMwaongtrZ6VUztL2xAIJLnwTj92S681+IHdMS0o4=",
     "last_login": null,
     "is_superuser": false,
     "username": "bruce_wayne",

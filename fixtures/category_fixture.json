@@ -1,0 +1,70 @@
+[{
+  "model": "product.category",
+  "pk": 1,
+  "fields": {
+    "name": "Eletronic"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 2,
+  "fields": {
+    "name": "Computers"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 3,
+  "fields": {
+    "name": "Gaming"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 4,
+  "fields": {
+    "name": "Home Entertainment"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 5,
+  "fields": {
+    "name": "Wearables"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 6,
+  "fields": {
+    "name": "Appliances"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 7,
+  "fields": {
+    "name": "Furniture"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 8,
+  "fields": {
+    "name": "Toys"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 9,
+  "fields": {
+    "name": "Health & Beauty"
+  }
+},
+{
+  "model": "product.category",
+  "pk": 10,
+  "fields": {
+    "name": "Sports & Outdoors"
+  }
+}]
