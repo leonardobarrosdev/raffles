@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 
@@ -12,7 +13,7 @@ def get_upload_path(instance, filename):
 
 
 class Category(models.Model):
-	name = models.CharField(max_length=120)
+	name = models.CharField(max_length=120, unique=True)
 
 	class Meta:
 		verbose_name_plural = 'Categories'
