@@ -16,7 +16,10 @@
     "date_birth": null,
     "is_staff": true,
     "groups": [],
-    "user_permissions": []
+    "user_permissions": [
+      21, 22, 23, 24,
+      32
+    ]
   }
 },
   {
@@ -163,7 +166,9 @@
     "date_birth": "1980-12-25",
     "is_staff": false,
     "groups": [],
-    "user_permissions": []
+    "user_permissions": [
+      21, 22, 23, 24
+    ]
   }
 },
 {
