@@ -1,5 +1,5 @@
-import json
-from django.http import JsonResponse
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.serializers import serialize
 from django.contrib.auth.decorators import (
@@ -25,7 +25,8 @@ permissions = ['product.*']
 decorators = [login_required, permission_required(permissions, raise_exception=True)]
 
 # @method_decorator(decorators, name='dispatch')
-class CreateView(View):
+class ProductCreateView(PermissionRequiredMixin, View):
+	permission_required = 'product.add_product'
 	template_name = 'raffle/create.html'
 	context = {}
 
@@ -60,7 +61,8 @@ class CreateView(View):
 
 
 # @method_decorator(decorators, name='dispatch')
-class UpdateView(View):
+class ProductUpdateView(PermissionRequiredMixin, View):
+	permission_required = 'change_product'
 	template_name = 'raffle/update.html'
 	context = {}
 
@@ -112,26 +114,21 @@ class UpdateView(View):
 
 
 @login_required(redirect_field_name='user:signin')
-def list(request):
+def product_list(request):
 	try:
 		products = Product.objects.all()
 		return render(request, 'raffle/list.html', {'products': products})
 	except:
 		return render(request, 'raffle/list.html', {'products': ()})
 
-# @login_required(redirect_field_name='user:signin')
-# def details(request, id):
-# 	user = request.user
-# 	product = Product.objects.filter(owner=user, id=id)
-# 	return render(request, 'raffle/details.html', {'product': product})
-
-def details(request, id):
+@login_required(redirect_field_name='user:signin')
+def product_details(request, id):
 	product = Product.objects.get(id=id)
-	return HttpResponse({'product': product})
+	return render(request, 'raffle/details.html', {'product': product})
 
 @login_required(redirect_field_name='user:signin')
 @require_http_methods(['DELETE'])
-def delete(request, id):
+def product_delete(request, id):
 	product = get_object_or_404(Product, id=id)
 	product.delete()
-	return render(request, 'partials/tbody.html')
+	return render(request, 'partials/tables/tbody.html')
