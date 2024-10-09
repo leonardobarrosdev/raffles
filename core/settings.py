@@ -144,7 +144,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 LOGIN_URL = '/auth/signin/'
 
-AUTHENTICATION_BACKENDS = ['user.authentify.backends.EmailAuthenticate']
+AUTHENTICATION_BACKENDS = ['apps.user.authentify.backends.EmailAuthenticate']
 AUTH_USER_MODEL = 'user.UserProfile'
 
 # TESTING = 'test' in sys.argv
