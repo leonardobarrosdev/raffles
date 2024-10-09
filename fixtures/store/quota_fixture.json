@@ -1,0 +1,80 @@
+[{
+  "model": "store.awardedquota",
+  "pk": 1,
+  "fields": {
+    "product": 2,
+    "number": 3
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 2,
+  "fields": {
+    "product": 1,
+    "number": 4
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 3,
+  "fields": {
+    "product": 3,
+    "number": 2
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 4,
+  "fields": {
+    "product": 4,
+    "number": 5
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 5,
+  "fields": {
+    "product": 5,
+    "number": 1
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 6,
+  "fields": {
+    "product": 8,
+    "number": 3
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 7,
+  "fields": {
+    "product": 6,
+    "number": 2
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 8,
+  "fields": {
+    "product": 7,
+    "number": 4
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 9,
+  "fields": {
+    "product": 9,
+    "number": 1
+  }
+},
+{
+  "model": "store.awardedquota",
+  "pk": 10,
+  "fields": {
+    "product": 10,
+    "number": 3
+  }
+}]

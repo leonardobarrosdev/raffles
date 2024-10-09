@@ -1,0 +1,92 @@
+[
+  {
+    "model": "store.promotion",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "amount": 0,
+      "price": "0.30"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 2,
+    "fields": {
+      "product": 2,
+      "amount": 10,
+      "price": "0.50"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 3,
+    "fields": {
+      "product": 3,
+      "amount": 5,
+      "price": "1.00"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 4,
+    "fields": {
+      "product": 4,
+      "amount": 20,
+      "price": "0.25"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 5,
+    "fields": {
+      "product": 5,
+      "amount": 15,
+      "price": "0.75"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 6,
+    "fields": {
+      "product": 6,
+      "amount": 8,
+      "price": "0.80"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 7,
+    "fields": {
+      "product": 7,
+      "amount": 12,
+      "price": "0.40"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 8,
+    "fields": {
+      "product": 8,
+      "amount": 25,
+      "price": "1.50"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 9,
+    "fields": {
+      "product": 9,
+      "amount": 30,
+      "price": "0.60"
+    }
+  },
+  {
+    "model": "store.promotion",
+    "pk": 10,
+    "fields": {
+      "product": 10,
+      "amount": 0,
+      "price": "0.90"
+    }
+  }
+]

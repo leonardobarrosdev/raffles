@@ -1,0 +1,92 @@
+[
+  {
+    "model": "store.automaticbuy",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "quantity": 0,
+      "more_popular": false
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 2,
+    "fields": {
+      "product": 2,
+      "quantity": 10,
+      "more_popular": true
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 3,
+    "fields": {
+      "product": 3,
+      "quantity": 5,
+      "more_popular": false
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 4,
+    "fields": {
+      "product": 4,
+      "quantity": 15,
+      "more_popular": true
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 5,
+    "fields": {
+      "product": 5,
+      "quantity": 20,
+      "more_popular": false
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 6,
+    "fields": {
+      "product": 6,
+      "quantity": 8,
+      "more_popular": true
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 7,
+    "fields": {
+      "product": 7,
+      "quantity": 12,
+      "more_popular": false
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 8,
+    "fields": {
+      "product": 8,
+      "quantity": 25,
+      "more_popular": true
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 9,
+    "fields": {
+      "product": 9,
+      "quantity": 3,
+      "more_popular": false
+    }
+  },
+  {
+    "model": "store.automaticbuy",
+    "pk": 10,
+    "fields": {
+      "product": 10,
+      "quantity": 7,
+      "more_popular": true
+    }
+  }
+]

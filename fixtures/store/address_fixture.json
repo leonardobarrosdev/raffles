@@ -1,0 +1,150 @@
+[{
+  "model": "store.shippingaddress",
+  "pk": 1,
+  "fields": {
+    "customer": 1,
+    "order": 1,
+    "address": "Mello Zeta",
+    "number": 14,
+    "neighborhood": null,
+    "city": "London",
+    "state": "CL",
+    "zipcode": 51511646,
+    "create_at": "2024-10-09T00:46:45.366Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 2,
+  "fields": {
+    "customer": 2,
+    "order": 2,
+    "address": "Maple Street",
+    "number": 20,
+    "neighborhood": "Downtown",
+    "city": "New York",
+    "state": "NY",
+    "zipcode": 10001,
+    "create_at": "2024-10-09T01:00:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 3,
+  "fields": {
+    "customer": 3,
+    "order": 3,
+    "address": "Oak Avenue",
+    "number": 45,
+    "neighborhood": "Eastside",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipcode": 90001,
+    "create_at": "2024-10-09T01:05:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 4,
+  "fields": {
+    "customer": 4,
+    "order": 4,
+    "address": "Pine Road",
+    "number": 78,
+    "neighborhood": null,
+    "city": "Chicago",
+    "state": "IL",
+    "zipcode": 60601,
+    "create_at": "2024-10-09T01:10:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 5,
+  "fields": {
+    "customer": 5,
+    "order": 5,
+    "address": "Cedar Boulevard",
+    "number": 12,
+    "neighborhood": "West End",
+    "city": "Houston",
+    "state": "TX",
+    "zipcode": 77001,
+    "create_at": "2024-10-09T01:15:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 6,
+  "fields": {
+    "customer": 6,
+    "order": 6,
+    "address": "Birch Lane",
+    "number": 33,
+    "neighborhood": "Uptown",
+    "city": "San Francisco",
+    "state": "CA",
+    "zipcode": 94101,
+    "create_at": "2024-10-09T01:20:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 7,
+  "fields": {
+    "customer": 7,
+    "order": 7,
+    "address": "Elm Street",
+    "number": 90,
+    "neighborhood": "Southside",
+    "city": "Miami",
+    "state": "FL",
+    "zipcode": 33101,
+    "create_at": "2024-10-09T01:25:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 8,
+  "fields": {
+    "customer": 8,
+    "order": 8,
+    "address": "Spruce Court",
+    "number": 21,
+    "neighborhood": "Central",
+    "city": "Seattle",
+    "state": "WA",
+    "zipcode": 98101,
+    "create_at": "2024-10-09T01:30:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 9,
+  "fields": {
+    "customer": 9,
+    "order": 9,
+    "address": "Hickory Way",
+    "number": 54,
+    "neighborhood": null,
+    "city": "Philadelphia",
+    "state": "PA",
+    "zipcode": 19101,
+    "create_at": "2024-10-09T01:35:00.000Z"
+  }
+},
+{
+  "model": "store.shippingaddress",
+  "pk": 10,
+  "fields": {
+    "customer": 10,
+    "order": 10,
+    "address": "Chestnut Street",
+    "number": 88,
+    "neighborhood": "Riverfront",
+    "city": "Austin",
+    "state": "TX",
+    "zipcode": 78701,
+    "create_at": "2024-10-09T01:40:00.000Z"
+  }
+}]
