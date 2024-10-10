@@ -56,6 +56,8 @@ class ProductModelTest(TestCase):
     def test_product_obj_field(self):
         product = Product.objects.get(pk=1)
         field_label = product._meta.get_field('price').verbose_name
-        max_length = product._meta.get_field('price').max_digits
+        max_digits = product._meta.get_field('price').max_digits
+        primary_key = product._meta.get_field('id').primary_key
         self.assertEqual(field_label, 'price')
-        self.assertEqual(max_length, 10)
+        self.assertEqual(max_digits, 10)
+        self.assertTrue(primary_key)
