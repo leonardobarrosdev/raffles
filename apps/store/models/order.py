@@ -44,7 +44,8 @@ class OrderItem(models.Model):
 		return self.quantity * self.product.price
 
 
-class OrderRaffle(OrderItem):
+class OrderRaffle(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.PROTECT)
 	raffle = models.ForeignKey(Raffle, on_delete=models.PROTECT)
 
 	def __str__(self):
