@@ -1,33 +1,6 @@
 [
   {
     "model": "store.order",
-    "pk": 1,
-    "fields": {
-      "customer": 1,
-      "status": "P",
-      "date_ordered": "2024-10-09T00:39:06.875Z"
-    }
-  },
-  {
-    "model": "store.order",
-    "pk": 2,
-    "fields": {
-      "customer": 2,
-      "status": "P",
-      "date_ordered": "2024-10-09T01:00:00.000Z"
-    }
-  },
-  {
-    "model": "store.order",
-    "pk": 3,
-    "fields": {
-      "customer": 3,
-      "status": "C",
-      "date_ordered": "2024-10-09T01:05:00.000Z"
-    }
-  },
-  {
-    "model": "store.order",
     "pk": 4,
     "fields": {
       "customer": 4,

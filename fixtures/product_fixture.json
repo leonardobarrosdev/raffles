@@ -11,7 +11,7 @@
     "description": "IPhone 12 + pro on box",
     "create_at": "2024-10-01T20:15:43.815Z",
     "updated_at": "2024-10-01T20:15:43.815Z",
-    "owner": 10,
+    "owner": 3,
     "category": 1
   }
 },
@@ -28,7 +28,7 @@
     "description": "New, blank, with suport and phone charger",
     "create_at": "2024-10-01T20:18:36.737Z",
     "updated_at": "2024-10-01T20:18:36.737Z",
-    "owner": 9,
+    "owner": 1,
     "category": 1
   }
 },
@@ -45,7 +45,7 @@
     "description": "Brand new Samsung Galaxy S21",
     "create_at": "2024-10-01T20:20:00.000Z",
     "updated_at": "2024-10-01T20:20:00.000Z",
-    "owner": 8,
+    "owner": 2,
     "category": 1
   }
 },
@@ -62,7 +62,7 @@
     "description": "Apple MacBook Pro 16-inch",
     "create_at": "2024-10-01T20:21:00.000Z",
     "updated_at": "2024-10-01T20:21:00.000Z",
-    "owner": 7,
+    "owner": 1,
     "category": 2
   }
 },
@@ -79,7 +79,7 @@
     "description": "Xbox Series X 1TB console",
     "create_at": "2024-10-01T20:22:00.000Z",
     "updated_at": "2024-10-01T20:22:00.000Z",
-    "owner": 6,
+    "owner": 3,
     "category": 3
   }
 },
@@ -96,7 +96,7 @@
     "description": "Sony PlayStation 5 Console",
     "create_at": "2024-10-01T20:23:00.000Z",
     "updated_at": "2024-10-01T20:23:00.000Z",
-    "owner": 5,
+    "owner": 2,
     "category": 3
   }
 },
@@ -113,7 +113,7 @@
     "description": "55-inch LG 4K UHD Smart TV",
     "create_at": "2024-10-01T20:24:00.000Z",
     "updated_at": "2024-10-01T20:24:00.000Z",
-    "owner": 4,
+    "owner": 2,
     "category": 4
   }
 },
@@ -147,7 +147,7 @@
     "description": "ASUS ROG Strix G15 Gaming Laptop",
     "create_at": "2024-10-01T20:26:00.000Z",
     "updated_at": "2024-10-01T20:26:00.000Z",
-    "owner": 2,
+    "owner": 3,
     "category": 2
   }
 },

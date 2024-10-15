@@ -1,9 +1,10 @@
 import json, urllib
 from apps.product.models import Product
+from apps.raffle.models import Raffle
 from .models import Order, OrderItem, OrderRaffle
 
 
-def cookie_cart_raffle(request):
+def get_cart_by_cookie(request):
 	order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
 	items = []
 	try:
@@ -18,7 +19,7 @@ def cookie_cart_raffle(request):
 	except:
 		return {'order': order, 'items': items}
 
-def cart_data_raffle(request):
+def get_cart_data(request):
 	if request.user.is_authenticated:
 		customer = request.user
 		try:
@@ -26,10 +27,10 @@ def cart_data_raffle(request):
 			items = order.orderraffle_set.all()
 			return {'order': order, 'items': items}
 		except Order.DoesNotExist:
-			return cookie_cart_raffle(request)
-	return cookie_cart_raffle(request)
+			return get_cart_by_cookie(request)
+	return get_cart_by_cookie(request)
 
-def cookie_set_subitems(request, product_id):
+def set_subitems_by_cookie(request, product_id):
 	order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
 	items = []
 	subitems = {}
@@ -44,7 +45,7 @@ def cookie_set_subitems(request, product_id):
 			order['get_items_quantity'] += len(numbers)
 	except:
 		return {'order': order, 'items': items, 'subitems': subitems}
-	return {'order': order, 'items': items, 'subitems': subitems}
+	return {'order': order, 'items': items, 'subitems': json.dumps(subitems)}
 
 def set_subitems(request, product_id):
 	if request.user.is_authenticated:
@@ -52,7 +53,7 @@ def set_subitems(request, product_id):
 		items = []
 		subitems = {}
 		try:
-			numbers = request.body['numbers']
+			numbers = request.data['numbers']
 			product = Product.objects.get(id=product_id)
 			order, created = Order.objects.get_or_create(customer=customer, status='P')
 			subitems[product_id] = [Raffle.objects.create(product=product, number=number) for number in numbers]
@@ -65,7 +66,7 @@ def set_subitems(request, product_id):
 				)
 				items.append(order_raffle)
 			return {'order': order, 'items': items, 'subitems': subitems}
-		except error:
+		except Exception:
 			return {}
 	return cookie_add_subitems(request, product_id)
 

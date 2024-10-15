@@ -1,15 +1,19 @@
 import json, mercadopago, qrcode
+
+import ipdb
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_http_methods
+
 from core import settings
 from apps.product.models import Product, Image
-from .models import Order, ShippingAddress
+from apps.raffle.models import Raffle
+from .models import Order, ShippingAddress, OrderRaffle
 from .forms import ShippingAddressForm
-from .utils import cart_data_raffle, cookie_cart_raffle, set_subitems
-import ipdb
+from .utils import get_cart_data
 
 
 def store(request):
@@ -21,12 +25,26 @@ def store(request):
 	return render(request, 'store/index.html', context)
 
 def cart(request):
-	context = cart_data_raffle(request)
+	context = get_cart_data(request)
 	return render(request, 'store/cart.html', context)
 
+@login_required
+@require_http_methods('POST')
 def add_subitems(request, product_id):
-	data = set_subitems(request, product_id)
-	return JsonResponse(data, safe=False)
+	customer = request.user
+	try:
+		numbers = json.loads(request.COOKIES['numbers'])
+		product = Product.objects.get(id=product_id)
+		order, created = Order.objects.get_or_create(customer=customer, status='P')
+		for number in numbers:
+			raffle = Raffle.objects.create(product=product, number=number)
+			OrderRaffle.objects.create(order=order, raffle=raffle)
+		data = {'order_id': order.id, 'item_title': product.title, 'subitems': numbers}
+		return JsonResponse(data, safe=True)
+	except KeyError:
+		return JsonResponse({'error': 'Numbers cookie missing'}, status=400)
+	except Product.DoesNotExist:
+		return JsonResponse({'error': 'Product not found'}, status=404)
 
 def process_payment(request):
 	sdk = mercadopago.SDK("ENV_ACCESS_TOKEN")
@@ -92,7 +110,6 @@ class CheckoutView(LoginRequiredMixin, View):
 
 	def get(self, request):
 		context = {}
-		ipdb.set_trace()
 		try:
 			context['order'] = Order.objects.get(customer=request.user)
 			context['items'] = Order.orderraffle_set.all()
