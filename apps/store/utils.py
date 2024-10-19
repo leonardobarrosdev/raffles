@@ -1,7 +1,8 @@
-import json, urllib
+import json, urllib, mercadopago, qrcode, uuid
 from apps.product.models import Product
 from apps.raffle.models import Raffle
 from .models import Order, OrderItem, OrderRaffle
+from apps.store.models import ShippingAddress
 
 
 def get_cart_by_cookie(request):
@@ -19,6 +20,22 @@ def get_cart_by_cookie(request):
 	except:
 		return {'order': order, 'items': items}
 
+def create_order_by_cookie(request):
+	order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
+	items = []
+	try:
+		decoded_json = urllib.parse.unquote(request.COOKIES.get('cart'))
+		cart = json.loads(decoded_json).get('cart')
+		for item_id, numbers in cart.items():
+			product = Product.objects.get(id=int(item_id))
+			for number in numbers:
+				Raffle.objects.create(product=product, number=number)
+			items.append(product)
+		order = Order.objects.create(custom=request.user, status='P')
+		return {'order': order, 'items': items}
+	except:
+		return {'order': order, 'items': items}
+
 def get_cart_data(request):
 	if request.user.is_authenticated:
 		customer = request.user
@@ -27,67 +44,39 @@ def get_cart_data(request):
 			items = order.orderraffle_set.all()
 			return {'order': order, 'items': items}
 		except Order.DoesNotExist:
-			return get_cart_by_cookie(request)
+			return create_order_by_cookie(request)
 	return get_cart_by_cookie(request)
 
-def set_subitems_by_cookie(request, product_id):
-	order = {'get_total_price': 0, 'get_items_quantity': 0, 'shipping': False}
-	items = []
-	subitems = {}
-	try:
-		decoded_json = urllib.parse.unquote(request.COOKIES.get("cart"))
-		cart = json.loads(decoded_json)
-		for item_id, numbers in cart.items():
-			product = Product.objects.get(id=item_id)
-			subitems[item_id] = [Raffle.objects.create(product=product, number=number) for number in numbers]
-			items.append(product)
-			order['get_total_price'] += product.price * len(numbers)
-			order['get_items_quantity'] += len(numbers)
-	except:
-		return {'order': order, 'items': items, 'subitems': subitems}
-	return {'order': order, 'items': items, 'subitems': json.dumps(subitems)}
-
-def set_subitems(request, product_id):
-	if request.user.is_authenticated:
-		customer = request.user
-		items = []
-		subitems = {}
-		try:
-			numbers = request.data['numbers']
-			product = Product.objects.get(id=product_id)
-			order, created = Order.objects.get_or_create(customer=customer, status='P')
-			subitems[product_id] = [Raffle.objects.create(product=product, number=number) for number in numbers]
-			for subitem in subitems.values():
-				order_raffle = OrderRaffle.objects.create(
-					order=order,
-					product=product,
-					raffle=subitem,
-					quantity=1
-				)
-				items.append(order_raffle)
-			return {'order': order, 'items': items, 'subitems': subitems}
-		except Exception:
-			return {}
-	return cookie_add_subitems(request, product_id)
-
-def quest_order(request, data):
-	name = data['form']['name']
-	email = data['form']['email']
-	cookie_data = cookie_cart(request)
-	items = cookie_data['items']
-	customer, created = User.objects.get_or_create(
-		email=email,
-	)
-	customer.save()
-	order = Order.objects.create(
-		customer=customer,
-		complete=False
-	)
-	for item in items:
-		product = Product.objects.get(id=item.id)
-		order_item = OrderItem.objects.create(
-			product=product,
-			order=order,
-			quantity=(item.quantity if item.quantity > 0 else -1 * item.quantity)
-		)
-	return customer, order
+def process_payment(request):
+	sdk = mercadopago.SDK("ENV_ACCESS_TOKEN")
+	order = Order.objects.get(customer=request.user)
+	shipping = ShippingAddress.objects.get(order=order)
+	request_options = mercadopago.config.RequestOptions()
+	request_options.custom_headers = {
+	    'x-idempotency-key': uuid.uuid4()
+	}
+	payment_data = {
+	    "transaction_amount": order.get_total_price,
+	    "description": order.product.title,
+	    "payment_method_id": "pix",
+	    "payer": {
+	        "email": request.user.email,
+	        "first_name": request.user.first_name,
+	        "last_name": request.user.last_name,
+	        "identification": {
+	            "type": "CPF",
+	            "number": request.user.cpf
+	        },
+	        "address": {
+	            "zip_code": shipping.zipcode,
+	            "street_name": shipping.address,
+	            "street_number": shipping.number,
+	            "neighborhood": shipping.neighborhood,
+	            "city": shipping.city,
+	            "federal_unit": shipping.state
+	        }
+	    }
+	}
+	payment_response = sdk.payment().create(payment_data, request_options)
+	payment = payment_response["response"]
+	return json.loads(payment)

@@ -1,4 +1,4 @@
-import json, mercadopago, qrcode
+import json, qrcode
 
 import ipdb
 from django.shortcuts import render
@@ -13,7 +13,7 @@ from apps.product.models import Product, Image
 from apps.raffle.models import Raffle
 from .models import Order, ShippingAddress, OrderRaffle
 from .forms import ShippingAddressForm
-from .utils import get_cart_data
+from .utils import get_cart_data, create_order_by_cookie, process_payment
 
 
 def store(request):
@@ -46,41 +46,6 @@ def add_subitems(request, product_id):
 	except Product.DoesNotExist:
 		return JsonResponse({'error': 'Product not found'}, status=404)
 
-def process_payment(request):
-	sdk = mercadopago.SDK("ENV_ACCESS_TOKEN")
-	order = Order.objects.get(customer=request.user)
-	# items = data.items
-	shipping = ShippingAddress.objects.get(order=order)
-	request_options = mercadopago.config.RequestOptions()
-	request_options.custom_headers = {
-	    'x-idempotency-key': '<SOME_UNIQUE_VALUE>'
-	}
-	payment_data = {
-	    "transaction_amount": order.get_total_price,
-	    "description": "Título do produto",
-	    "payment_method_id": "pix",
-	    "payer": {
-	        "email": request.user.email,
-	        "first_name": request.user.first_name,
-	        "last_name": request.user.last_name,
-	        "identification": {
-	            "type": "CPF",
-	            "number": request.user.cpf
-	        },
-	        "address": {
-	            "zip_code": shipping.zipcode,
-	            "street_name": shipping.address,
-	            "street_number": shipping.number,
-	            "neighborhood": shipping.neighborhood,
-	            "city": shipping.city,
-	            "federal_unit": shipping.state
-	        }
-	    }
-	}
-	payment_response = sdk.payment().create(payment_data, request_options)
-	payment = payment_response["response"]
-	return json.loads(payment)
-
 @login_required(redirect_field_name='user:signin')
 def process_order(request):
 	data = json.loads(request.body)
@@ -109,15 +74,13 @@ class CheckoutView(LoginRequiredMixin, View):
 	template_name = 'store/checkout.html'
 
 	def get(self, request):
-		context = {}
-		try:
-			context['order'] = Order.objects.get(customer=request.user)
-			context['items'] = Order.orderraffle_set.all()
-			shipping, created = ShippingAddress.objects.get_or_create(customer=request.user)
-			context['form_shipping'] = ShippingAddressForm(instance=shipping)
-		except Order.DoesNotExist:
-			context = cookie_cart_raffle(request)
-			context['form_shipping'] = ShippingAddressForm()
+		context = create_order_by_cookie(request)
+		if context.order.shipping:
+			try:
+				address = ShippingAddress.objects.get(customer=request.user)
+				context['form_shipping'] = ShippingAddressForm(instance=address)
+			except ShippingAddress.DoesNotExist:
+				context['form_shipping'] = ShippingAddressForm()
 		return render(request, self.template_name, context)
 
 	def post(self, request):
